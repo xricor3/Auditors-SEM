@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<style>html,body{margin:0}body{font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>SEM Planificació Auditories</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: estilo consola SEM — cabecera blanca con marca y reloj, filete rojo, barra de mando oscura con pestañas, calendario + panel lateral */
+:root{
+  --bg:#dfe3e7; --surface:#ffffff; --surface-2:#eef0f2; --line:#cfd4d9;
+  --fg:#1d2226; --muted:#5d666e;
+  --sem:#d4192c; --sem-ink:#ffffff; --sem-soft:#fbe3e5;
+  --bar:#23282d; --bar-ink:#ffffff; --bar-btn:#343a40;
+  --yellow:#d4192c; --yellow-ink:#ffffff;
+  --vac:#5b7fb8; --vac-bg:#e2e9f5; --ok:#14843f; --ok-bg:#dcf1e3; --warn:#a46200; --warn-bg:#fdefcf; --bad:#c0141f; --bad-bg:#fbe0e2;
+  --font-display:"Ubuntu","Segoe UI",system-ui,sans-serif;
+  --font-body:"Ubuntu","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121518; --surface:#1b1f23; --surface-2:#23282d; --line:#343a40;
+  --fg:#e8ebee; --muted:#9aa3ab; --sem:#ef3b4c; --sem-ink:#ffffff; --sem-soft:#3d1c20;
+  --bar:#0b0d0f; --bar-ink:#ffffff; --bar-btn:#2b3036; --yellow:#ef3b4c; --yellow-ink:#ffffff;
+  --vac:#7fa3dc; --vac-bg:#1f2a3d; --ok:#5fd394; --ok-bg:#173726; --warn:#f2c14e; --warn-bg:#3a2f12; --bad:#ff8a8f; --bad-bg:#3f1b1d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121518; --surface:#1b1f23; --surface-2:#23282d; --line:#343a40;
+  --fg:#e8ebee; --muted:#9aa3ab; --sem:#ef3b4c; --sem-ink:#ffffff; --sem-soft:#3d1c20;
+  --bar:#0b0d0f; --bar-ink:#ffffff; --bar-btn:#2b3036; --yellow:#ef3b4c; --yellow-ink:#ffffff;
+  --vac:#7fa3dc; --vac-bg:#1f2a3d; --ok:#5fd394; --ok-bg:#173726; --warn:#f2c14e; --warn-bg:#3a2f12; --bad:#ff8a8f; --bad-bg:#3f1b1d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1400px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--surface);color:var(--fg);border-bottom:4px solid var(--sem)}
+.top .wrap{display:flex;align-items:center;gap:12px 28px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;flex-direction:column;gap:8px}
+.brand .wm{font-weight:700;font-size:21px;letter-spacing:-.01em;line-height:1}
+.brand .sq{display:flex;gap:22px}.brand .sq i{width:18px;height:18px;background:var(--sem);display:block}
+.ttl b{display:block;font-size:24px;font-weight:700;line-height:1.2}
+.ttl span{color:var(--muted);font-size:15px}
+.clock{margin-left:auto;text-align:right}
+.clock b{display:block;font:700 34px var(--font-display);font-variant-numeric:tabular-nums;line-height:1}
+.clock span{color:var(--muted);font-size:14px}
+.cmd{background:var(--bar);color:var(--bar-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.cmd .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:8px}
+.badge{background:var(--sem);color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:5px 10px;border-radius:3px}
+.who{margin-left:auto;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.role{text-transform:uppercase;letter-spacing:.06em;font-size:12px;border:1px solid currentColor;padding:2px 8px;border-radius:3px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;min-width:0}
+nav.tabs button{font:500 15px var(--font-body);border:1px solid #4a5157;background:var(--bar-btn);color:var(--bar-ink);padding:7px 14px;border-radius:4px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--sem);border-color:var(--sem)}
+.notice{margin-top:12px;padding:10px 14px;border-radius:6px;background:var(--warn-bg);color:var(--fg);font-size:14px;border-left:4px solid var(--warn)}
+main{padding-block:16px 48px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:960px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:16px}
+h2{font-family:var(--font-display);font-size:24px;margin:0;letter-spacing:.01em;text-wrap:balance}
+h3{font-size:14px;font-weight:700;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--fg);padding:7px 12px;font:600 14px var(--font-body);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--sem);color:var(--sem-ink)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:7px 12px;border-radius:6px;font:600 14px var(--font-body);cursor:pointer}
+.btn:hover{border-color:var(--sem)}
+.btn.primary{background:var(--sem);color:var(--sem-ink);border-color:var(--sem)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.sm{padding:4px 9px;font-size:13px}
+.btn.danger{color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid #2f7de1;outline-offset:2px}
+.period{font-family:var(--font-display);font-size:22px;text-transform:capitalize;min-width:0}
+select,input{font:15px var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:end}
+.mono{font-family:var(--font-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.tnum{font-variant-numeric:tabular-nums}
+/* month */
+.scroll{overflow-x:auto}
+.month{display:grid;grid-template-columns:repeat(7,minmax(92px,1fr));gap:4px;min-width:660px}
+.dow{font-family:var(--font-display);text-transform:uppercase;font-size:13px;letter-spacing:.06em;color:var(--muted);padding:2px 6px}
+.cell{background:var(--surface);border:1px solid var(--line);border-radius:6px;min-height:96px;padding:6px;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.cell:hover{border-color:var(--sem)}
+.cell.out{opacity:.4}
+.cell.today{border:2px solid var(--sem)}.cell.today .dnum{color:var(--sem)}
+.cell .row{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.dnum{font-family:var(--font-display);font-size:18px}
+.cov{font:600 11px var(--font-mono);padding:1px 6px;border-radius:99px}
+.cov.ok{background:var(--ok-bg);color:var(--ok)} .cov.part{background:var(--warn-bg);color:var(--warn)} .cov.none{background:var(--bad-bg);color:var(--bad)}
+.cell.gap{box-shadow:inset 0 -3px 0 var(--bad)}
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{font-size:11.5px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--sem-soft);color:var(--fg);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip.pend{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+.chip.pend::before{content:"? ";}
+/* week */
+.week{display:grid;grid-template-columns:repeat(7,minmax(130px,1fr));gap:6px;min-width:920px}
+.wcol{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:6px;min-height:220px}
+.wcol header{display:flex;justify-content:space-between;align-items:baseline;cursor:pointer}
+.slot{border-left:3px solid var(--sem);background:var(--surface-2);border-radius:4px;padding:5px 7px;font-size:13px}
+.slot.pend{border-left-color:var(--line);color:var(--muted)}
+.slot .n{font-weight:700;color:var(--fg)}
+/* year */
+.year{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.mini{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px}
+.mini h4{margin:0 0 6px;font-family:var(--font-display);font-size:17px;text-transform:capitalize;cursor:pointer}
+.mini .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mini .d{aspect-ratio:1;border-radius:3px;font:500 10px var(--font-mono);display:grid;place-items:center;background:var(--surface-2);color:var(--muted);border:0;padding:0;cursor:pointer;max-width:100%}
+.mini .d.ok{background:var(--ok);color:var(--surface)} .mini .d.part{background:var(--warn);color:var(--surface)}
+.mini .d.blank{background:none;cursor:default}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+/* day/list */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{border:1px solid var(--line);border-radius:6px;padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;background:var(--surface)}
+.item .t{font-weight:700}
+.item .s{font-size:13px;color:var(--muted)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pill{font:600 12px var(--font-body);text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:99px}
+.pill.asignado{background:var(--ok-bg);color:var(--ok)} .pill.pendiente{background:var(--warn-bg);color:var(--warn)} .pill.descartado{background:var(--surface-2);color:var(--muted)}
+.comp{grid-column:1/-1;font-size:13px;background:var(--surface-2);border-radius:5px;padding:6px 9px}
+.comp.missing{background:var(--bad-bg);color:var(--bad)}
+.compform{grid-column:1/-1}
+/* counter */
+.ctr{display:flex;flex-direction:column;gap:10px}
+.ctr .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;font-size:14px}
+.bar{grid-column:1/-1;height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sem)}
+.bar i.over{background:var(--warn)}
+.big{font-family:var(--font-display);font-size:40px;line-height:1}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:14px}
+th{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.05em;font-size:13px;color:var(--muted)}
+td input{width:76px}
+.empty{color:var(--muted);font-size:14px;padding:10px 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:6px;font-weight:600;z-index:20}
+@media (prefers-reduced-motion:no-preference){.cell,.btn{transition:border-color .15s}}
+
+.push{margin-left:auto}
+.lead{margin:4px 0 14px;color:var(--muted);max-width:72ch}
+.hint{font-size:13px;color:var(--muted);margin:8px 0}
+.narrow{max-width:560px;margin:24px auto}
+.mt{margin-top:16px}
+.span{grid-column:1/-1}
+.cap{text-transform:capitalize}
+.muted{color:var(--muted)}
+.badtxt{color:var(--bad)} .warntxt{color:var(--warn)} .oktxt{color:var(--ok)}
+.nb{display:inline-block;margin-left:7px;background:#fff;color:var(--sem);font-weight:700;font-size:12px;min-width:20px;padding:0 6px;border-radius:99px;text-align:center}
+nav.tabs button[aria-selected="true"] .nb{color:var(--sem)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.stat span{font-size:13px;color:var(--muted);font-weight:500}
+.stat b{font-size:34px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat small,.big small{font-size:18px;color:var(--muted);font-weight:500}
+.stat.warn{border-left-color:var(--warn)} .stat.bad{border-left-color:var(--bad)}
+.stat.bad b{color:var(--bad)}
+.panel.alert{border-color:var(--bad);border-left:5px solid var(--bad)}
+.vgroup{border-top:1px solid var(--line);padding-block:10px}
+.vhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.linkbtn{background:none;border:0;padding:0;font:700 16px var(--font-body);color:var(--fg);cursor:pointer;text-transform:capitalize;text-align:left}
+.linkbtn:hover{color:var(--sem);text-decoration:underline}
+.vrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:7px 10px;background:var(--surface-2);border-radius:5px;margin-top:5px}
+.vn{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;min-width:0}
+.vn .s{font-size:13px;color:var(--muted)}
+@media (max-width:560px){.vrow{grid-template-columns:minmax(0,1fr)}.vrow .acts{justify-content:flex-start}}
+.tag{font-size:11px;font-weight:700;color:var(--sem);text-transform:uppercase;letter-spacing:.04em}
+.grid-half{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start}
+.chip.vac{background:var(--vac-bg);color:var(--vac)}
+.slot.vacs{border-left-color:var(--vac);background:var(--vac-bg)}
+.mini .d.vacd{background:var(--vac);color:var(--surface)}
+.mini .d.hd{font-size:9px}
+.pill.vacp{background:var(--vac-bg);color:var(--vac)}
+.star{color:var(--sem);font-size:12px;margin-left:3px;vertical-align:super}
+.dayhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.dayhead p{margin:0}
+.f.inline{flex-direction:row;align-items:center;gap:8px}
+.f.inline input{width:70px}
+.f.chk span{display:flex;gap:6px;align-items:center;color:var(--fg);font-weight:500;padding-bottom:9px}
+td input.wide{width:220px}
+td input[type=checkbox],.f.chk input{width:18px;height:18px;accent-color:var(--sem)}
+.row-btn{text-align:left;display:flex;justify-content:space-between;gap:8px}
+.legend i.dash{border:1px dashed var(--muted)}
+.big small{font-size:20px}
+table.sit td,table.sit th{text-align:right;white-space:nowrap}table.sit td:first-child,table.sit th:first-child{text-align:left}
+table.sit tr.cur td{background:var(--sem-soft)}
+table.sit tfoot th,table.sit tfoot td{border-top:2px solid var(--fg);font-weight:700}
+.notice.sim{background:var(--sem-soft);border-left-color:var(--sem);display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.addday{border:1px dashed var(--sem);border-radius:6px;padding:12px 14px;background:var(--sem-soft)}
+table.inf td.n,table.inf th.n{text-align:right}
+table.inf td.wrap{white-space:normal;min-width:180px;max-width:360px}
+table.inf tfoot th,table.inf tfoot td{border-top:2px solid var(--fg);font-weight:700}
+details summary{cursor:pointer;color:var(--muted);font-weight:500}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand" aria-label="emergències mèdiques"><span class="wm">emergències mèdiques</span><span class="sq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+    <div class="ttl"><b>Planificació d'auditories</b><span>Control d'auditors · Unitats assistencials</span></div>
+    <div class="clock"><b id="hora">--:--:--</b><span id="fecha"></span></div>
+  </div>
+</header>
+<div class="cmd"><div class="wrap">
+  <span class="badge">Auditories</span>
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+  <div class="who" id="who"><span class="role">Carregant…</span></div>
+</div></div>
+<div class="wrap">
+  <div id="notice"></div>
+  <main id="main"><p class="empty">Carregant la planificació…</p></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<style>
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.gate .box{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--sem);border-radius:8px;padding:28px;width:100%;max-width:400px;display:flex;flex-direction:column;gap:14px}
+.gate .brand{margin-bottom:6px}
+.gate h1{font-size:20px;margin:0}
+.gate input{width:100%}
+.gate .err{color:var(--bad);font-size:14px;min-height:20px;margin:0}
+.gate ol{margin:0;padding-left:20px;font-size:14px;line-height:1.6}
+.who .btn{background:var(--bar-btn);color:var(--bar-ink);border-color:#4a5157}
+</style>
+<div class="gate" id="gate" hidden></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ================= CONFIGURACIÓ (edita només aquest bloc) ================= */
+// 1) Enganxa aquí la configuració del teu projecte de Firebase
+const FIREBASE_CONFIG = {
+  apiKey: "ENGANXA_AQUI",
+  authDomain: "ENGANXA_AQUI",
+  projectId: "ENGANXA_AQUI",
+  appId: "ENGANXA_AQUI"
+};
+// 2) Usuaris administradors (sempre tenen accés de gestor, encara que no estiguin vinculats)
+const ADMINS = ["xrico"];
+// 3) Domini intern dels usuaris: l'usuari "xrico" és el compte "xrico@auditories.sem" a Firebase
+const USER_DOMAIN = "auditories.sem";
+/* ========================================================================== */
+
+(function(){
+  const gate=document.getElementById("gate");
+  const marca=`<div class="brand"><span class="wm">emergències mèdiques</span><span class="sq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>`;
+  const pending={};const waiters={};
+  const ready=new Promise(res=>{waiters.go=res});
+  window.SEM_AUTH=true;
+  window.claude={use:name=>ready.then(api=>api[name]??null)};
+  const noCfg=!FIREBASE_CONFIG.apiKey||FIREBASE_CONFIG.apiKey==="ENGANXA_AQUI";
+  if(noCfg||!window.firebase){
+    gate.hidden=false;
+    gate.innerHTML=`<div class="box">${marca}<h1>${noCfg?"Falta configurar l'aplicació":"No s'ha pogut carregar l'aplicació"}</h1>${noCfg?`<ol><li>Crea un projecte a Firebase.</li><li>Activa l'accés amb correu i contrasenya.</li><li>Crea la base de dades Firestore.</li><li>Enganxa la configuració del projecte al bloc CONFIGURACIÓ d'aquest fitxer.</li></ol>`:`<p>Comprova la connexió a internet i torna a carregar la pàgina.</p>`}</div>`;
+    return;
+  }
+  firebase.initializeApp(FIREBASE_CONFIG);
+  const auth=firebase.auth(),fs=firebase.firestore();
+  const toEmail=u=>{u=u.trim().toLowerCase();return u.includes("@")?u:`${u}@${USER_DOMAIN}`};
+  const userName=()=>{const e=auth.currentUser?.email||"";return e.endsWith("@"+USER_DOMAIN)?e.slice(0,-USER_DOMAIN.length-1):e};
+  window.SEM_USER=userName;
+  const ds=s=>({id:s.id,exists:!!s.exists,data:()=>s.data(),metadata:s.metadata||{fromCache:false,hasPendingWrites:false}});
+  const qs=s=>({docs:s.docs.map(ds),size:s.size,empty:s.empty,metadata:s.metadata||{fromCache:false,hasPendingWrites:false}});
+  const wrapDoc=r=>({id:r.id,path:r.path,get:()=>r.get().then(ds),set:d=>r.set(d),update:d=>r.set(d,{merge:true}),delete:()=>r.delete(),
+    onSnapshot:(n,e)=>r.onSnapshot(s=>n(ds(s)),e),collection:p=>wrapCol(r.collection(p))});
+  const wrapCol=c=>({path:c.path,doc:id=>wrapDoc(c.doc(id)),get:()=>c.get().then(qs),onSnapshot:(n,e)=>c.onSnapshot(s=>n(qs(s)),e)});
+  const api={
+    db:{doc:p=>wrapDoc(fs.doc(p)),collection:p=>wrapCol(fs.collection(p))},
+    user:{id:async()=>auth.currentUser.uid,isOwner:async()=>ADMINS.includes(userName()),canEdit:async()=>ADMINS.includes(userName()),can:async()=>true,profiles:async()=>({})},
+    downloads:{save:async({filename,data})=>{const b=data instanceof Blob?data:new Blob([data]);const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000)}}
+  };
+  const ERR={"auth/invalid-credential":"Usuari o contrasenya incorrectes.","auth/wrong-password":"Usuari o contrasenya incorrectes.","auth/user-not-found":"Usuari o contrasenya incorrectes.","auth/invalid-email":"L'usuari no és vàlid.","auth/too-many-requests":"Massa intents. Espera uns minuts i torna-ho a provar.","auth/network-request-failed":"No hi ha connexió. Torna-ho a provar.","auth/weak-password":"La contrasenya ha de tenir com a mínim 6 caràcters.","auth/requires-recent-login":"Per seguretat, surt, torna a entrar i canvia la contrasenya tot seguit."};
+  function loginForm(){
+    gate.hidden=false;
+    gate.innerHTML=`<form class="box" id="login-form">${marca}<h1>Planificació d'auditories</h1>
+      <label class="f">Usuari<input id="lg-user" autocomplete="username" required autofocus></label>
+      <label class="f">Contrasenya<input id="lg-pass" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="lg-err" role="alert"></p><button class="btn primary" id="lg-btn">Entra</button></form>`;
+    document.getElementById("login-form").addEventListener("submit",async ev=>{
+      ev.preventDefault();ev.stopPropagation();const b=document.getElementById("lg-btn"),er=document.getElementById("lg-err");
+      b.disabled=true;er.textContent="";
+      try{await auth.signInWithEmailAndPassword(toEmail(document.getElementById("lg-user").value),document.getElementById("lg-pass").value)}
+      catch(e){er.textContent=ERR[e.code]||"No s'ha pogut iniciar la sessió.";b.disabled=false}
+    });
+  }
+  function passForm(){
+    gate.hidden=false;
+    gate.innerHTML=`<form class="box" id="pass-form">${marca}<h1>Canvia la contrasenya</h1>
+      <label class="f">Contrasenya nova<input id="pw-1" type="password" autocomplete="new-password" minlength="6" required></label>
+      <label class="f">Repeteix la contrasenya<input id="pw-2" type="password" autocomplete="new-password" minlength="6" required></label>
+      <p class="err" id="pw-err" role="alert"></p><div class="acts"><button type="button" class="btn" id="pw-cancel">Cancel·la</button><button class="btn primary">Desa la contrasenya</button></div></form>`;
+    document.getElementById("pw-cancel").addEventListener("click",()=>{gate.hidden=true;gate.innerHTML=""});
+    document.getElementById("pass-form").addEventListener("submit",async ev=>{
+      ev.preventDefault();ev.stopPropagation();const er=document.getElementById("pw-err"),a=document.getElementById("pw-1").value;
+      if(a!==document.getElementById("pw-2").value){er.textContent="Les dues contrasenyes no coincideixen.";return}
+      try{await auth.currentUser.updatePassword(a);gate.hidden=true;gate.innerHTML="";if(window.toast)toast("Contrasenya canviada")}
+      catch(e){er.textContent=ERR[e.code]||"No s'ha pogut canviar la contrasenya."}
+    });
+  }
+  let started=false;
+  auth.onAuthStateChanged(u=>{
+    if(u){gate.hidden=true;gate.innerHTML="";if(!started){started=true;waiters.go(api)}}
+    else if(started){location.reload()}
+    else loginForm();
+  });
+  document.addEventListener("click",ev=>{
+    const b=ev.target.closest("[data-a]");if(!b)return;
+    if(b.dataset.a==="logout")auth.signOut();
+    if(b.dataset.a==="chpass")passForm();
+  });
+  // Importació de dades inicials (només administradors)
+  document.addEventListener("change",async ev=>{
+    const t=ev.target;if(t.id!=="imp-file"||!t.files[0])return;
+    try{
+      const d=JSON.parse(await t.files[0].text());let n=0;
+      for(const [k,v] of Object.entries(d.config||{})){await fs.doc(`config/${k}`).set(v);n++}
+      for(const [p,v] of Object.entries(d.vacaciones||{})){await fs.doc(`vacaciones/${p}`).set(v);n++}
+      for(const [p,dies] of Object.entries(d.disp||{}))for(const [f,v] of Object.entries(dies)){await fs.doc(`disp/${p}/dias/${f}`).set(v);n++}
+      toast(`Dades importades: ${n} registres`);
+    }catch(e){toast("No s'han pogut importar les dades. Comprova el fitxer.")}
+    t.value="";
+  });
+})();
+</script>
+<script>
+const FRANJAS = {
+  manana:{l:"Matí",i:"08:00",f:"15:00"}, tarde:{l:"Tarda",i:"15:00",f:"22:00"},
+  noche:{l:"Nit",i:"22:00",f:"08:00"}, jornada:{l:"Jornada 12 h",i:"08:00",f:"20:00"},
+  personalizada:{l:"Personalitzada",i:"",f:""}
+};
+const RECURSOS = ["SVB","SVA (metge)","SVAI (infermeria)","VIR","Helicòpter","CECOS / Sala de coordinació","Base / Unitat assistencial"];
+const TERRITORIOS = ["Alt Pirineu i Aran","Lleida","Camp de Tarragona","Terres de l'Ebre","Girona","Catalunya Central","Barcelona","Metropolitana Nord","Metropolitana Sud","Penedès","CECOS"];
+const MESES = ["gener","febrer","març","abril","maig","juny","juliol","agost","setembre","octubre","novembre","desembre"];
+const DOW = ["Dl","Dt","Dc","Dj","Dv","Ds","Dg"];
+
+const S = {
+  db:null, user:null, uid:null, owner:false, demo:false, canWrite:true,
+  equipo:{}, eqLoaded:false,
+  cfg:{minPorDia:2, minDias:{}, objetivoDefecto:2, objetivosMes:{}},
+  dias:new Map(), vac:new Map(), subs:new Map(), names:new Map(),
+  tab:"calendario", mode:"mes", cursor:new Date(), filtro:"todos", vacPid:null, inf:null, dl:null, vista:"gestor", verComo:null, sitPid:null, sitYear:new Date().getFullYear(),
+  editComp:null, busy:false, loaded:false, stale:false, skipLink:false
+};
+let saved={}; try{saved=JSON.parse(localStorage.getItem("sem-ui")||"{}")}catch(e){}
+if(saved.mode) S.mode=saved.mode;
+if(saved.tab) S.tab=saved.tab;
+if(saved.vista) S.vista=saved.vista;
+if(saved.verComo) S.verComo=saved.verComo;
+function remember(){try{localStorage.setItem("sem-ui",JSON.stringify({mode:S.mode,tab:S.tab,vista:S.vista,verComo:S.verComo}))}catch(e){}}
+
+/* ---------- fechas ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const mondayOf=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());return addDays(x,-((x.getDay()+6)%7))};
+const ym=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+const todayIso=iso(new Date());
+const fLarga=s=>parse(s).toLocaleDateString("ca-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const fCorta=s=>parse(s).toLocaleDateString("ca-ES",{weekday:"short",day:"numeric",month:"short"});
+const fMes=d=>`${MESES[d.getMonth()]} ${d.getFullYear()}`;
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const slug=n=>n.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"persona";
+const clone=o=>JSON.parse(JSON.stringify(o||{}));
+
+/* ---------- equipo y roles ---------- */
+const realPid=()=>S.uid?Object.keys(S.equipo).find(p=>S.equipo[p].uid===S.uid)||null:null;
+const realGestor=()=>{const p=realPid();return (p&&!!S.equipo[p].gestor)||S.owner};
+const realAuditor=()=>{const p=realPid();return !!(p&&S.equipo[p].auditor)};
+const simulando=()=>realGestor()&&S.vista==="auditor"&&!!S.verComo&&!!S.equipo[S.verComo]?.auditor;
+const preview=()=>simulando()&&S.verComo!==realPid();
+const mePid=()=>simulando()?S.verComo:realPid();
+const isGestor=()=>realGestor()&&!simulando();
+const isAuditor=()=>simulando()||realAuditor();
+const soloPropio=()=>!isGestor();
+const nombre=p=>S.equipo[p]?.nombre||"Persona eliminada";
+const corto=p=>{const n=nombre(p).trim().split(/\s+/);return n.length>1?`${n[0]} ${n[1][0]}.`:n[0]};
+const porNombre=(a,b)=>nombre(a).localeCompare(nombre(b),"ca");
+const auditores=()=>Object.keys(S.equipo).filter(p=>S.equipo[p].auditor).sort(porNombre);
+const gestores=()=>Object.keys(S.equipo).filter(p=>S.equipo[p].gestor).sort(porNombre);
+
+/* ---------- reglas ---------- */
+const minFor=k=>{const v=S.cfg.minDias?.[k];return Number.isFinite(v)?v:S.cfg.minPorDia};
+const objOverride=(p,mes)=>{const v=S.cfg.objetivosMes?.[mes]?.[p];return Number.isFinite(v)?v:null};
+const objetivo=(p,mes)=>objOverride(p,mes)??S.cfg.objetivoDefecto;
+const enVac=(p,k)=>(S.vac.get(p)||[]).some(v=>v.desde<=k&&k<=v.hasta);
+const covClass=(n,k)=>{const m=minFor(k);return n>=m?"ok":n>0?"part":"none"};
+
+/* ---------- datos derivados ---------- */
+function entradas(){const out=[];for(const p of auditores()){const m=S.dias.get(p);if(m)for(const[f,d]of m)out.push({pid:p,fecha:f,...d})}return out}
+function porFecha(){const map=new Map();for(const e of entradas()){if(!map.has(e.fecha))map.set(e.fecha,[]);map.get(e.fecha).push(e)}for(const l of map.values())l.sort((a,b)=>porNombre(a.pid,b.pid));return map}
+const asignados=(list)=>list.filter(e=>e.estado==="asignado").length;
+function asignadosMes(p,mes){let n=0;const m=S.dias.get(p);if(m)for(const[f,d]of m)if(d.estado==="asignado"&&f.startsWith(mes))n++;return n}
+function vacDiasMes(p,mes){const[y,m]=mes.split("-").map(Number),days=new Date(y,m,0).getDate();let n=0;for(let d=1;d<=days;d++)if(enVac(p,`${mes}-${pad(d)}`))n++;return n}
+const pendientes=()=>entradas().filter(e=>e.estado==="pendiente").sort((a,b)=>a.fecha.localeCompare(b.fecha)||porNombre(a.pid,b.pid));
+const compOk=c=>!!(c&&c.recurso&&c.territorio);
+const hor=e=>e.inicio?`${e.inicio}–${e.fin}`:"Horari no indicat";
+function compTxt(c){if(!c)return "";const d=c.fecha?`Lliura el ${fCorta(c.fecha)}`:"Lliura";const r=compOk(c)?` a ${esc(c.recurso)} · ${esc(c.territorio)}`:" · unitat i territori per informar";const h=c.inicio?` · <span class="mono">${esc(c.inicio)}–${esc(c.fin)}</span>`:"";return esc(d)+r+h}
+const sinComp=p=>entradas().filter(e=>e.estado==="asignado"&&!compOk(e.comp)&&(!p||e.pid===p)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+const visibles=list=>soloPropio()?list.filter(e=>e.pid===mePid()):S.filtro==="todos"?list:list.filter(e=>e.pid===S.filtro);
+const deVacaciones=k=>(soloPropio()?[mePid()].filter(Boolean):auditores()).filter(p=>enVac(p,k));
+const filtroEf=()=>soloPropio()?(mePid()||"__nadie"):S.filtro;
+
+/* ---------- UI base ---------- */
+const $=id=>document.getElementById(id);
+function toast(msg){const t=$("toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+const badge=n=>n?`<span class="nb">${n}</span>`:"";
+
+function renderHeader(){
+  const p=mePid(),roles=[];
+  if(simulando())roles.push("Vista auditor/a");else{if(isGestor())roles.push("Gestor/a");if(isAuditor())roles.push("Auditor/a")}
+  $("who").innerHTML=`<span>${esc(p?nombre(p):S.demo?"":"Sense identificar")}</span>${roles.map(r=>`<span class="role">${r}</span>`).join("")}${window.SEM_AUTH&&S.uid?`<button class="btn sm" data-a="chpass">Contrasenya</button><button class="btn sm" data-a="logout">Surt (${esc(window.SEM_USER())})</button>`:""}`;
+  const g=isGestor(),a=isAuditor(),tabs=[["calendario","Calendari",0]];
+  if(g) tabs.push(["validar","Pendents de validar",pendientes().filter(e=>e.fecha>=todayIso).length]);
+  if(a) tabs.push(["mis","La meva disponibilitat",sinComp(p).length]);
+  if(a||g) tabs.push(["situacion",g?"Situació per auditor":"La meva situació",0]);
+  if(a||g) tabs.push(["vacaciones","Vacances",0]);
+  if(g) tabs.push(["informe","Informe",0]);
+  if(g){tabs.push(["objetivos","Objectius i regles",0]);tabs.push(["equipo","Equip i rols",0])}
+  if(realGestor()) tabs.push(["perfil","El meu perfil",0]);
+  if(!tabs.some(t=>t[0]===S.tab)) S.tab="calendario";
+  $("tabs").innerHTML=tabs.map(([k,l,n])=>`<button role="tab" data-a="tab" data-v="${k}" aria-selected="${S.tab===k}">${l}${badge(n)}</button>`).join("");
+  let n="";
+  if(simulando()) n+=`<div class="notice sim"><b>Estàs veient l'aplicació com a auditor/a: ${esc(nombre(S.verComo))}.</b> ${preview()?"Vista prèvia: pots navegar i veure'n els límits, però no es desa cap canvi.":"Pots treballar amb les teves dades d'auditor/a."} <button class="btn sm" data-a="vista" data-v="gestor">Torna a la vista de gestor/a</button></div>`;
+  if(S.demo) n+=`<div class="notice">Vista d'exemple amb disponibilitats fictícies: la base de dades compartida no està disponible en aquesta vista. A l'aplicació publicada veuràs les dades reals de l'equip.</div>`;
+  else if(S.stale) n+=`<div class="notice">Encara no es pot connectar amb la base de dades. El que veus pot no estar actualitzat.</div>`;
+  else if(!S.canWrite) n+=`<div class="notice">Tens accés només de lectura. Demana al propietari de l'aplicació que et doni permís de participació.</div>`;
+  $("notice").innerHTML=n;
+}
+function render(){
+  renderHeader();
+  const m=$("main");
+  if(needsLink()){m.innerHTML=vVincular();return}
+  const v={calendario:vCalendario,validar:vValidar,mis:vMis,vacaciones:vVacaciones,situacion:vSituacion,perfil:vPerfil,informe:vInforme,objetivos:vObjetivos,equipo:vEquipo}[S.tab]||vCalendario;
+  m.innerHTML=v();
+}
+const needsLink=()=>!S.demo&&S.uid&&S.eqLoaded&&!realPid()&&!S.skipLink;
+
+/* ---------- identificación ---------- */
+function vVincular(){
+  const libres=Object.keys(S.equipo).filter(p=>!S.equipo[p].uid).sort(porNombre);
+  return `<section class="panel narrow"><h2>Qui ets?</h2>
+  <p class="lead">Selecciona el teu nom de l'equip per vincular-lo al teu compte. Només ho hauràs de fer una vegada.</p>
+  ${libres.length?`<form class="form" data-form="link"><label class="f">El teu nom<select id="link-pid" name="pid" required><option value="">Selecciona…</option>${libres.map(p=>`<option value="${esc(p)}">${esc(nombre(p))}</option>`).join("")}</select></label><div><button class="btn primary">Sóc jo</button></div></form>`
+  :`<p class="empty">No hi ha noms lliures a l'equip. Demana a un gestor/a que t'afegeixi a "Equip i rols".</p>`}
+  <p class="hint">Si el teu nom no apareix o ja està vinculat a un altre compte, avisa un gestor/a.</p>
+  ${S.owner?`<p><button class="btn" data-a="skiplink">Continua com a propietari sense vincular</button></p>`:`<p><button class="btn" data-a="skiplink">Només consulta el calendari</button></p>`}</section>`;
+}
+
+/* ---------- calendario ---------- */
+function filtroSelect(){
+  return `<select id="filtro" aria-label="Filtra per auditor"><option value="todos">Tots els auditors</option>${auditores().map(p=>`<option value="${esc(p)}" ${S.filtro===p?"selected":""}>${esc(nombre(p))}</option>`).join("")}</select>`;
+}
+function periodo(){
+  const c=S.cursor;
+  if(S.mode==="dia") return fLarga(iso(c));
+  if(S.mode==="semana"){const a=mondayOf(c),b=addDays(a,6);return `${a.getDate()} ${MESES[a.getMonth()].slice(0,3)} – ${b.getDate()} ${MESES[b.getMonth()].slice(0,3)} ${b.getFullYear()}`}
+  if(S.mode==="mes") return fMes(c);
+  return String(c.getFullYear());
+}
+function vCalendario(){
+  const modes=[["dia","Dia"],["semana","Setmana"],["mes","Mes"],["ano","Any"]];
+  const tb=`<div class="toolbar">
+    <div class="seg" role="group" aria-label="Vista">${modes.map(([k,l])=>`<button data-a="mode" data-v="${k}" aria-pressed="${S.mode===k}">${l}</button>`).join("")}</div>
+    <div class="seg"><button data-a="nav" data-v="-1" aria-label="Anterior">‹</button><button data-a="hoy">Avui</button><button data-a="nav" data-v="1" aria-label="Següent">›</button></div>
+    <span class="period">${esc(periodo())}</span>${isAuditor()&&S.mode!=="dia"?`<span class="hint" style="margin:0">Prem un dia per afegir la teva disponibilitat</span>`:""}${soloPropio()?"":`<span class="push">${filtroSelect()}</span>`}</div>`;
+  const pf=porFecha();
+  const body=S.mode==="mes"?vMes(pf):S.mode==="semana"?vSemana(pf):S.mode==="dia"?vDia(pf,iso(S.cursor)):vAno(pf);
+  const legend=soloPropio()?`<div class="legend"><span><i style="background:var(--ok)"></i>Assignat</span><span><i class="dash"></i>Pendent de confirmar</span><span><i style="background:var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Calen més auditors del que és habitual</span></div>`:`<div class="legend"><span><i style="background:var(--ok)"></i>Cobert</span><span><i style="background:var(--warn)"></i>Cobertura parcial</span><span><i style="background:var(--bad)"></i>Sense assignar</span><span><i class="dash"></i>Disponible, pendent de validar</span><span><i style="background:var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Dia amb mínim especial</span></div>`;
+  return `<div class="grid2"><section class="panel" aria-label="Calendari">${tb}${body}${S.mode!=="dia"?legend:""}</section><aside class="stack">${vContador()}${vHuecos(pf)}</aside></div>`;
+}
+function cellChips(list,k){
+  const v=visibles(list),a=v.filter(e=>e.estado==="asignado"),p=v.filter(e=>e.estado==="pendiente");
+  const fe=filtroEf(),vac=fe==="todos"?deVacaciones(k).length:(enVac(fe,k)?1:0);
+  if(soloPropio()) return `<div class="chips">${a.map(e=>`<span class="chip">Assignat</span>`).join("")}${p.map(e=>`<span class="chip pend">Pendent</span>`).join("")}${vac?`<span class="chip vac">Vacances</span>`:""}</div>`;
+  return `<div class="chips">${a.map(e=>`<span class="chip" title="${esc(nombre(e.pid))} ${esc(hor(e))}">${esc(corto(e.pid))}</span>`).join("")}${p.length?`<span class="chip pend">${p.length} disp.</span>`:""}${vac?`<span class="chip vac">${fe==="todos"?vac+" vac.":"Vacances"}</span>`:""}</div>`;
+}
+const special=k=>Number.isFinite(S.cfg.minDias?.[k]);
+function vMes(pf){
+  const c=S.cursor,start=mondayOf(new Date(c.getFullYear(),c.getMonth(),1));
+  let h=DOW.map(d=>`<div class="dow">${d}</div>`).join("");
+  for(let i=0;i<42;i++){
+    const d=addDays(start,i),k=iso(d),list=pf.get(k)||[];
+    if(i>=35&&d.getMonth()!==c.getMonth())break;
+    const n=asignados(list),cc=covClass(n,k),inM=d.getMonth()===c.getMonth(),sp=soloPropio(),gap=!sp&&inM&&k>=todayIso&&cc!=="ok";
+    h+=`<button class="cell ${inM?"":"out"} ${k===todayIso?"today":""} ${gap?"gap":""}" data-a="ir" data-v="${k}" aria-label="${esc(fLarga(k))}${sp?"":`: ${n} de ${minFor(k)} assignats`}">
+      <span class="row"><span class="dnum">${d.getDate()}${special(k)?"<b class='star'>★</b>":""}</span>${sp?"":`<span class="cov ${cc}">${n}/${minFor(k)}</span>`}</span>${cellChips(list,k)}</button>`;
+  }
+  return `<div class="scroll"><div class="month">${h}</div></div>`;
+}
+function vSemana(pf){
+  const a=mondayOf(S.cursor);let h="";
+  for(let i=0;i<7;i++){
+    const d=addDays(a,i),k=iso(d),list=visibles(pf.get(k)||[]).filter(e=>e.estado!=="descartado"),n=asignados(pf.get(k)||[]);
+    const fe=filtroEf(),vac=(fe==="todos"?deVacaciones(k):enVac(fe,k)?[fe]:[]);
+    h+=`<div class="wcol"><header data-a="ir" data-v="${k}"><span class="dnum">${DOW[i]} ${d.getDate()}${special(k)?"<b class='star'>★</b>":""}</span>${soloPropio()?"":`<span class="cov ${covClass(n,k)}">${n}/${minFor(k)}</span>`}</header>
+      ${list.map(e=>`<div class="slot ${e.estado==="asignado"?"":"pend"}"><div class="n">${esc(nombre(e.pid))}</div><div class="mono">${esc(hor(e))}</div>${e.estado==="asignado"?(compOk(e.comp)?`<div>${compTxt(e.comp)}</div>`:`<div class="badtxt">${e.comp?compTxt(e.comp):"Falta la compensació"}</div>`):"<div>Pendent de validar</div>"}</div>`).join("")}
+      ${vac.map(p=>`<div class="slot vacs"><div class="n">${esc(nombre(p))}</div><div>Vacances</div></div>`).join("")}
+      ${!list.length&&!vac.length?`<div class="empty">${soloPropio()?"Sense dies":"Sense professionals"}</div>`:""}</div>`;
+  }
+  return `<div class="scroll"><div class="week">${h}</div></div>`;
+}
+function vAno(pf){
+  const y=S.cursor.getFullYear();let h="";
+  for(let m=0;m<12;m++){
+    const first=new Date(y,m,1),lead=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+    let g=DOW.map(d=>`<span class="d blank hd">${d}</span>`).join("")+"<span class='d blank'></span>".repeat(lead);
+    for(let d=1;d<=days;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`,list=pf.get(k)||[];
+      let cc;const fe=filtroEf();
+      if(fe==="todos")cc=covClass(asignados(list),k);
+      else cc=enVac(fe,k)?"vacd":list.some(e=>e.pid===fe&&e.estado==="asignado")?"ok":list.some(e=>e.pid===fe&&e.estado==="pendiente")?"part":"none";
+      g+=`<button class="d ${cc==="none"?"":cc}" data-a="ir" data-v="${k}" aria-label="${k}">${d}</button>`}
+    h+=`<div class="mini"><h4 data-a="irmes" data-v="${m}">${MESES[m]}</h4><div class="g">${g}</div></div>`;
+  }
+  return `<div class="year">${h}</div>`;
+}
+function vDia(pf,k){
+  const all=pf.get(k)||[],list=visibles(all),n=asignados(all),cc=covClass(n,k),min=minFor(k);
+  const msg=cc==="ok"?"Cobertura mínima assolida":cc==="part"?`Falten ${min-n} professional(s) per a la cobertura mínima`:"Cap professional assignat";
+  let h=soloPropio()?`<div class="dayhead">${special(k)?`<p>★ Dia en què calen més auditors del que és habitual.</p>`:""}`:`<div class="dayhead"><p><span class="cov ${cc}">${n}/${min}</span> ${msg}</p>`;
+  if(isGestor()&&!S.demo) h+=`<label class="f inline">Mínim per a aquest dia<input type="number" min="1" max="30" id="daymin" data-k="${k}" value="${min}"></label>${special(k)?`<button class="btn sm" data-a="delmin" data-v="${k}">Torna al general (${S.cfg.minPorDia})</button>`:""}`;
+  h+=`</div>`;
+  if(!list.length) h+=`<p class="empty">${soloPropio()?"No has enviat disponibilitat per a aquest dia.":"Ningú no ha indicat disponibilitat per a aquest dia."}</p>`;
+  h+=`<div class="list">${list.map(e=>itemHTML(e,true)).join("")}</div>`;
+  h+=diaDispForm(k);
+  const libran=visibles(entradas().filter(e=>e.estado==="asignado"&&e.comp&&e.comp.fecha===k));
+  if(libran.length) h+=`<h3 class="mt">Lliuren per compensació</h3><div class="list">${libran.map(e=>`<div class="item"><div><div class="t">${esc(nombre(e.pid))}</div><div class="s">Per l'auditoria del ${esc(fCorta(e.fecha))}${compOk(e.comp)?` · ${esc(e.comp.recurso)} · ${esc(e.comp.territorio)}`:" · unitat i territori per informar"}</div></div></div>`).join("")}</div>`;
+  const vac=deVacaciones(k).filter(p=>filtroEf()==="todos"||p===filtroEf());
+  if(vac.length) h+=`<h3 class="mt">De vacances</h3><div class="chips">${vac.map(p=>`<span class="chip vac">${esc(nombre(p))}</span>`).join("")}</div>`;
+  return h;
+}
+function diaDispForm(k){
+  const me=mePid();if(!isAuditor()||!me)return "";
+  if(S.dias.get(me)?.get(k))return "";
+  if(k<todayIso)return "";
+  if(enVac(me,k))return `<p class="hint mt">Aquest dia estàs de vacances: no pots oferir disponibilitat.</p>`;
+  const def=FRANJAS.manana,off=S.demo||!S.canWrite;
+  return `<section class="addday mt"><h3>Afegeix la meva disponibilitat per a aquest dia</h3>
+  <form class="form" data-form="disp"><input type="hidden" name="fecha" value="${k}">
+    <label class="f">Franja<select id="d-franja" name="franja">${Object.entries(FRANJAS).map(([x,v])=>`<option value="${x}">${v.l}${v.i?` (${v.i}–${v.f})`:""}</option>`).join("")}</select></label>
+    <label class="f">Des de<input id="d-ini" name="inicio" type="time" required value="${def.i}"></label>
+    <label class="f">Fins a<input id="d-fin" name="fin" type="time" required value="${def.f}"></label>
+    <label class="f span">Nota (opcional)<input id="d-nota" name="nota" maxlength="140"></label>
+    <div><button class="btn primary" ${off?"disabled":""}>Envia la disponibilitat</button></div></form></section>`;
+}
+function itemHTML(e,showName){
+  const g=isGestor()&&!S.demo,mine=e.pid===mePid()&&!S.demo,vac=enVac(e.pid,e.fecha),key=`${e.pid}|${e.fecha}`;
+  const d=`data-p="${esc(e.pid)}" data-f="${e.fecha}"`;
+  let acts="";
+  if(g){
+    if(e.estado==="pendiente"){acts+=vac?`<button class="btn sm" disabled>De vacances</button>`:`<button class="btn sm primary" data-a="estado" ${d} data-v="asignado">Assigna</button>`;acts+=`<button class="btn sm" data-a="estado" ${d} data-v="descartado">Descarta</button>`}
+    if(e.estado==="asignado") acts+=`<button class="btn sm" data-a="estado" ${d} data-v="pendiente">Treu l'assignació</button>`;
+    if(e.estado==="descartado") acts+=`<button class="btn sm" data-a="estado" ${d} data-v="pendiente">Recupera</button>`;
+  }
+  if((mine||g)&&e.estado==="asignado") acts+=`<button class="btn sm ${compOk(e.comp)?"":"primary"}" data-a="editcomp" data-v="${esc(key)}">${compOk(e.comp)?"Edita la compensació":"Informa la compensació"}</button>`;
+  if(mine&&e.estado==="pendiente") acts+=`<button class="btn sm danger" data-a="borrar" ${d}>Retira</button>`;
+  let comp="";
+  if(e.estado==="asignado") comp=compOk(e.comp)?`<div class="comp"><b>Compensació:</b> ${compTxt(e.comp)}</div>`:`<div class="comp missing">${e.comp?"<b>Compensació incompleta:</b> "+compTxt(e.comp):"Compensació pendent d'informar"}</div>`;
+  const label={pendiente:"pendent",asignado:"assignat",descartado:"descartat"}[e.estado]||e.estado;
+  return `<div class="item"><div><div class="t">${showName?esc(nombre(e.pid)):esc(fLarga(e.fecha))}</div>
+    <div class="s"><span class="mono">${esc(hor(e))}</span>${FRANJAS[e.franja]?" · "+esc(FRANJAS[e.franja].l):""}${e.nota?" · "+esc(e.nota):""}</div></div>
+    <div class="acts">${vac?`<span class="pill vacp">vacances</span>`:""}<span class="pill ${e.estado}">${label}</span>${acts}</div>${comp}${S.editComp===key?compForm(e):""}</div>`;
+}
+function compForm(e){
+  const c=e.comp||{};
+  return `<form class="compform form" data-form="comp" data-p="${esc(e.pid)}" data-f="${e.fecha}">
+    <label class="f">Dia que lliures<input id="c-fecha" name="fecha" type="date" required value="${esc(c.fecha||e.fecha)}"></label>
+    <label class="f">Unitat on lliures<input id="c-rec" name="recurso" list="dl-rec" required value="${esc(c.recurso||"")}" placeholder="p. ex. SVA (metge)"></label>
+    <label class="f">Territori<input id="c-ter" name="territorio" list="dl-ter" required value="${esc(c.territorio||"")}"></label>
+    <label class="f">Des de<input id="c-ini" name="inicio" type="time" required value="${esc(c.inicio||e.inicio||"")}"></label>
+    <label class="f">Fins a<input id="c-fin" name="fin" type="time" required value="${esc(c.fin||e.fin||"")}"></label>
+    <div class="acts"><button type="button" class="btn sm" data-a="cancelcomp">Cancel·la</button><button class="btn sm primary">Desa la compensació</button></div>
+    <datalist id="dl-rec">${RECURSOS.map(r=>`<option value="${esc(r)}">`).join("")}</datalist>
+    <datalist id="dl-ter">${TERRITORIOS.map(r=>`<option value="${esc(r)}">`).join("")}</datalist></form>`;
+}
+function barra(a,o){return `<div class="bar"><i style="width:${Math.min(100,o?a/o*100:(a?100:0))}%" class="${a>o?"over":""}"></i></div>`}
+function vContador(){
+  const mes=ym(S.cursor),p=mePid();
+  if(!isGestor()&&isAuditor()){
+    const a=asignadosMes(p,mes),o=objetivo(p,mes),r=Math.max(0,o-a),sc=sinComp(p).length;
+    return `<section class="panel"><h3>Els meus dies · ${esc(fMes(S.cursor))}</h3><div class="big tnum">${a}<small> / ${o}</small></div>
+      <p class="hint">${r?`Et falten ${r} dia(es) assignats per complir l'objectiu del mes.`:"Objectiu del mes complert."}</p>${barra(a,o)}</section>
+      <section class="panel ${sc?"alert":""}"><h3>Compensacions per informar</h3><div class="big tnum">${sc}</div>${sc?`<p><button class="btn sm primary" data-a="tab" data-v="mis">Informa-les ara</button></p>`:`<p class="hint">Totes informades.</p>`}</section>`;
+  }
+  const ids=auditores();
+  if(!ids.length) return `<section class="panel"><h3>Comptador de dies</h3><p class="empty">No hi ha auditors a l'equip.</p></section>`;
+  return `<section class="panel"><h3>Comptador de dies · ${esc(fMes(S.cursor))}</h3><div class="ctr">${ids.map(p=>{const a=asignadosMes(p,mes),o=objetivo(p,mes);
+    return `<div class="r"><span>${esc(nombre(p))}</span><span class="mono">${a} / ${o}</span>${barra(a,o)}</div>`}).join("")}</div></section>`;
+}
+function huecosMes(pf,c){
+  const y=c.getFullYear(),m=c.getMonth(),days=new Date(y,m+1,0).getDate(),out=[];
+  for(let d=1;d<=days;d++){const k=`${y}-${pad(m+1)}-${pad(d)}`;if(k<todayIso)continue;const l=pf.get(k)||[],n=asignados(l);if(n<minFor(k))out.push([k,n,l.filter(e=>e.estado==="pendiente").length])}
+  return out;
+}
+function vHuecos(pf){
+  const out=huecosMes(pf,S.cursor);
+  if(soloPropio()){const mine=new Set([...(S.dias.get(mePid())||new Map()).keys()]);const l=out.filter(([k])=>!mine.has(k)&&!enVac(mePid(),k));
+    return `<section class="panel"><h3>Dies que encara necessiten auditors</h3><p class="hint">Si pots, envia la teva disponibilitat per a algun d'aquests dies.</p>${l.length?`<div class="list">${l.slice(0,12).map(([k])=>`<button class="btn row-btn" data-a="ir" data-v="${k}"><span>${esc(fCorta(k))}${special(k)?" ★":""}</span><span>Ofereix-me</span></button>`).join("")}</div>`:`<p class="empty">No hi ha dies pendents de cobrir aquest mes.</p>`}</section>`}
+  return `<section class="panel"><h3>Dies sense cobertura mínima</h3>${out.length?`<div class="list">${out.slice(0,12).map(([k,n,p])=>`<button class="btn row-btn" data-a="ir" data-v="${k}"><span>${esc(fCorta(k))}${special(k)?" ★":""}</span><span class="mono">${n}/${minFor(k)}${p?` · ${p} disp.`:""}</span></button>`).join("")}${out.length>12?`<p class="empty">i ${out.length-12} dies més aquest mes</p>`:""}</div>`:`<p class="empty">Tots els dies que queden aquest mes tenen la cobertura mínima.</p>`}</section>`;
+}
+
+/* ---------- validar (gestor) ---------- */
+function vValidar(){
+  const pf=porFecha(),pend=pendientes(),fut=pend.filter(e=>e.fecha>=todayIso),pas=pend.filter(e=>e.fecha<todayIso);
+  const huecos=huecosMes(pf,new Date()),sc=sinComp();
+  const groups=new Map();for(const e of fut){if(!groups.has(e.fecha))groups.set(e.fecha,[]);groups.get(e.fecha).push(e)}
+  const mesOf=k=>k.slice(0,7);
+  const rowFor=e=>{const m=mesOf(e.fecha),a=asignadosMes(e.pid,m),o=objetivo(e.pid,m),vac=enVac(e.pid,e.fecha),d=`data-p="${esc(e.pid)}" data-f="${e.fecha}"`;
+    return `<div class="vrow"><div class="vn"><b>${esc(nombre(e.pid))}</b><span class="mono">${esc(hor(e))}</span>${e.nota?`<span class="s">${esc(e.nota)}</span>`:""}</div>
+    <span class="mono ${a>=o?"oktxt":""}" title="Dies assignats aquest mes / objectiu">${a}/${o} mes</span>
+    <div class="acts">${vac?`<span class="pill vacp">vacances</span>`:`<button class="btn sm primary" data-a="estado" ${d} data-v="asignado">Assigna</button>`}<button class="btn sm" data-a="estado" ${d} data-v="descartado">Descarta</button></div></div>`};
+  let list="";
+  for(const[k,l]of groups){const all=pf.get(k)||[],n=asignados(all);
+    list+=`<div class="vgroup"><div class="vhead"><button class="linkbtn" data-a="ir" data-v="${k}">${esc(fLarga(k))}${special(k)?" ★":""}</button><span class="cov ${covClass(n,k)}">${n}/${minFor(k)} assignats</span>${l.length>1&&!S.demo?`<button class="btn sm push" data-a="asigntodo" data-v="${k}">Assigna-les totes (${l.filter(e=>!enVac(e.pid,k)).length})</button>`:""}</div>${l.map(rowFor).join("")}</div>`}
+  return `<div class="stack">
+    <div class="stats">
+      <div class="stat ${fut.length?"warn":""}"><span>Disponibilitats per validar</span><b>${fut.length}</b></div>
+      <div class="stat ${huecos.length?"bad":""}"><span>Dies sense cobertura aquest mes</span><b>${huecos.length}</b></div>
+      <div class="stat ${sc.length?"bad":""}"><span>Compensacions sense informar</span><b>${sc.length}</b></div>
+    </div>
+    <section class="panel"><h2>Pendents de validar</h2><p class="lead">Ordenades per data. Al costat de cada auditor veus els dies assignats aquell mes respecte al seu objectiu.</p>
+    ${fut.length?list:`<p class="empty">No tens disponibilitats pendents de validar.</p>`}
+    ${pas.length?`<details class="mt"><summary>${pas.length} disponibilitat(s) de dates ja passades sense validar</summary>${pas.map(e=>`<div class="vgroup"><div class="vhead"><span>${esc(fCorta(e.fecha))}</span></div>${rowFor(e)}</div>`).join("")}</details>`:""}</section>
+    ${sc.length?`<section class="panel"><h3>Compensacions sense informar per auditor</h3><div class="ctr">${auditores().map(p=>[p,sinComp(p).length]).filter(x=>x[1]).map(([p,n])=>`<div class="r"><span>${esc(nombre(p))}</span><span class="mono badtxt">${n}</span></div>`).join("")}</div></section>`:""}
+  </div>`;
+}
+
+/* ---------- mi disponibilidad (auditor) ---------- */
+function vMis(){
+  const p=mePid();if(!p)return `<section class="panel"><p class="empty">Identifica't per registrar la teva disponibilitat.</p></section>`;
+  const m=S.dias.get(p)||new Map(),list=[...m].map(([f,d])=>({pid:p,fecha:f,...d})).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const sc=list.filter(e=>e.estado==="asignado"&&!compOk(e.comp));
+  const fut=list.filter(e=>e.fecha>=todayIso&&!(e.estado==="asignado"&&!compOk(e.comp))),pas=list.filter(e=>e.fecha<todayIso&&!(e.estado==="asignado"&&!compOk(e.comp))).reverse();
+  const mes=ym(new Date()),a=asignadosMes(p,mes),o=objetivo(p,mes),pp=list.filter(e=>e.estado==="pendiente"&&e.fecha>=todayIso).length;
+  const def=FRANJAS.manana;
+  return `<div class="stack">
+    <div class="stats">
+      <div class="stat ${sc.length?"bad":""}"><span>Compensacions per informar</span><b>${sc.length}</b></div>
+      <div class="stat"><span>Dies assignats · ${esc(fMes(new Date()))}</span><b>${a}<small> / ${o}</small></b></div>
+      <div class="stat ${pp?"warn":""}"><span>Pendents de validar pel gestor</span><b>${pp}</b></div>
+    </div>
+    ${sc.length?`<section class="panel alert"><h2>Compensacions pendents d'informar</h2><p class="lead">Dies que ja tens assignats. Indica en quina unitat lliures, el territori i l'horari.</p><div class="list">${sc.map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
+    <section class="panel"><h2>Afegeix disponibilitat</h2><p class="lead">Indica el dia i la franja horària. El gestor/a validarà quins dies se t'assignen.</p>
+    <form class="form" data-form="disp">
+      <label class="f">Dia disponible<input id="d-fecha" name="fecha" type="date" required min="${todayIso}"></label>
+      <label class="f">Franja<select id="d-franja" name="franja">${Object.entries(FRANJAS).map(([k,v])=>`<option value="${k}">${v.l}${v.i?` (${v.i}–${v.f})`:""}</option>`).join("")}</select></label>
+      <label class="f">Des de<input id="d-ini" name="inicio" type="time" required value="${def.i}"></label>
+      <label class="f">Fins a<input id="d-fin" name="fin" type="time" required value="${def.f}"></label>
+      <label class="f span">Nota (opcional)<input id="d-nota" name="nota" maxlength="140" placeholder="p. ex. disponible només a la zona de Barcelona"></label>
+      <div><button class="btn primary" ${S.demo||!S.canWrite?"disabled":""}>Envia la disponibilitat</button></div>
+    </form></section>
+    <section class="panel"><h3>Els meus propers dies</h3>${fut.length?`<div class="list">${fut.map(e=>itemHTML(e,false)).join("")}</div>`:`<p class="empty">No has enviat disponibilitat per a dates futures.</p>`}</section>
+    ${pas.length?`<section class="panel"><h3>Historial</h3><div class="list">${pas.slice(0,20).map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
+  </div>`;
+}
+
+/* ---------- vacaciones ---------- */
+function vVacaciones(){
+  const g=isGestor(),me=mePid();
+  const opts=g?auditores():(me?[me]:[]);
+  if(!S.vacPid||!opts.includes(S.vacPid)) S.vacPid=(me&&opts.includes(me))?me:opts[0]||null;
+  const p=S.vacPid,per=(S.vac.get(p)||[]).slice().sort((a,b)=>a.desde.localeCompare(b.desde));
+  const conflict=v=>[...(S.dias.get(p)||new Map())].filter(([f,d])=>d.estado==="asignado"&&f>=v.desde&&f<=v.hasta).map(([f])=>f);
+  const proximas=[];for(const q of auditores())for(const v of S.vac.get(q)||[])if(v.hasta>=todayIso)proximas.push({p:q,...v});
+  proximas.sort((a,b)=>a.desde.localeCompare(b.desde));
+  return `<div class="grid2"><div class="stack"><section class="panel"><h2>Vacances</h2>
+    <p class="lead">Els dies de vacances no es poden assignar ni rebre disponibilitat.</p>
+    ${g?`<label class="f" style="max-width:320px">Auditor/a<select id="vac-pid">${opts.map(q=>`<option value="${esc(q)}" ${q===p?"selected":""}>${esc(nombre(q))}</option>`).join("")}</select></label>`:""}
+    ${p?`<form class="form mt" data-form="vac">
+      <label class="f">Des de<input id="v-desde" name="desde" type="date" required></label>
+      <label class="f">Fins a<input id="v-hasta" name="hasta" type="date" required></label>
+      <label class="f span">Nota (opcional)<input id="v-nota" name="nota" maxlength="100" placeholder="p. ex. vacances de Nadal"></label>
+      <div><button class="btn primary" ${S.demo?"disabled":""}>Afegeix vacances</button></div></form>
+    <h3 class="mt">Períodes de ${esc(nombre(p))}</h3>
+    ${per.length?`<div class="list">${per.map(v=>{const c=conflict(v),dias=Math.round((parse(v.hasta)-parse(v.desde))/864e5)+1;
+      return `<div class="item"><div><div class="t">${esc(fCorta(v.desde))} – ${esc(fCorta(v.hasta))} <span class="mono">(${dias} d)</span></div><div class="s">${esc(v.nota||"")}${v.hasta<todayIso?" · ja gaudides":""}</div></div>
+      <div class="acts">${S.demo?"":`<button class="btn sm danger" data-a="delvac" data-p="${esc(p)}" data-v="${esc(v.id)}">Elimina</button>`}</div>
+      ${c.length?`<div class="comp missing">Atenció: té ${c.length} dia(es) assignats dins d'aquest període (${c.map(fCorta).join(", ")}). ${g?"Treu aquestes assignacions des del calendari.":"Avisa el gestor/a."}</div>`:""}</div>`}).join("")}</div>`:`<p class="empty">No hi ha vacances registrades.</p>`}`:`<p class="empty">No hi ha auditors.</p>`}
+    </section></div>
+    <aside class="stack">${g?`<section class="panel"><h3>Properes vacances de l'equip</h3>${proximas.length?`<div class="ctr">${proximas.map(v=>`<div class="r"><span>${esc(nombre(v.p))}</span><span class="mono">${esc(fCorta(v.desde))} – ${esc(fCorta(v.hasta))}</span></div>`).join("")}</div>`:`<p class="empty">Ningú no té vacances previstes.</p>`}</section>`:vContador()}</aside></div>`;
+}
+
+
+/* ---------- situación personal ---------- */
+function vSituacion(){
+  const g=isGestor(),me=mePid(),opts=g?auditores():(me&&isAuditor()?[me]:[]);
+  if(!S.sitPid||!opts.includes(S.sitPid)) S.sitPid=(me&&opts.includes(me))?me:opts[0]||null;
+  const p=S.sitPid,y=S.sitYear;
+  if(!p) return `<section class="panel"><p class="empty">No hi ha auditors per mostrar.</p></section>`;
+  const all=[...(S.dias.get(p)||new Map())].map(([f,d])=>({pid:p,fecha:f,...d}));
+  const rows=[];let acA=0,acO=0;
+  const T={disp:0,asig:0,obj:0,pend:0,desc:0,ci:0,cp:0,lib:0,vac:0};
+  for(let m=1;m<=12;m++){
+    const mes=`${y}-${pad(m)}`,l=all.filter(e=>e.fecha.startsWith(mes));
+    const r={mes:m,disp:l.length,asig:l.filter(e=>e.estado==="asignado").length,obj:objetivo(p,mes),
+      pend:l.filter(e=>e.estado==="pendiente").length,desc:l.filter(e=>e.estado==="descartado").length,
+      ci:l.filter(e=>e.estado==="asignado"&&compOk(e.comp)).length,cp:l.filter(e=>e.estado==="asignado"&&!compOk(e.comp)).length,
+      lib:all.filter(e=>e.estado==="asignado"&&e.comp?.fecha?.startsWith(mes)).length,vac:vacDiasMes(p,mes)};
+    acA+=r.asig;acO+=r.obj;r.acA=acA;r.acO=acO;rows.push(r);
+    for(const k in T)T[k]+=r[k];
+  }
+  const fut=all.filter(e=>e.fecha>=todayIso).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const prox=fut.filter(e=>e.estado==="asignado"),pend=fut.filter(e=>e.estado==="pendiente"),cp=all.filter(e=>e.estado==="asignado"&&!compOk(e.comp)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const mesAct=ym(new Date()),curM=new Date().getMonth()+1,curRow=y===new Date().getFullYear()?rows[curM-1]:null;
+  const dif=n=>n>0?`+${n}`:String(n);
+  const cell=(v,cls="")=>`<td class="mono ${cls}">${v||v===0?v:""}</td>`;
+  const lista=(l,txt)=>l.length?`<div class="list">${l.slice(0,8).map(e=>`<button class="btn row-btn" data-a="ir" data-v="${e.fecha}"><span>${esc(fCorta(e.fecha))}</span><span class="mono">${esc(txt(e))}</span></button>`).join("")}${l.length>8?`<p class="empty">i ${l.length-8} més</p>`:""}</div>`:`<p class="empty">Cap.</p>`;
+  return `<div class="stack">
+    <section class="panel"><div class="toolbar">
+      ${g?`<label class="f" style="min-width:220px">Auditor/a<select id="sit-pid">${opts.map(q=>`<option value="${esc(q)}" ${q===p?"selected":""}>${esc(nombre(q))}</option>`).join("")}</select></label>`:`<h2>${esc(nombre(p))}</h2>`}
+      <span class="seg push"><button data-a="sitano" data-v="-1" aria-label="Any anterior">‹</button><button disabled>${y}</button><button data-a="sitano" data-v="1" aria-label="Any següent">›</button></span></div>
+    <div class="stats">
+      ${curRow?`<div class="stat"><span>Assignats · ${esc(fMes(new Date()))}</span><b>${curRow.asig}<small> / ${curRow.obj}</small></b></div>`:""}
+      <div class="stat"><span>Assignats el ${y}</span><b>${T.asig}<small> / ${T.obj}</small></b></div>
+      <div class="stat ${pend.length?"warn":""}"><span>Pendents de confirmar</span><b>${pend.length}</b></div>
+      <div class="stat ${cp.length?"bad":""}"><span>Compensacions per informar</span><b>${cp.length}</b></div>
+      <div class="stat"><span>Disponibilitat facilitada el ${y}</span><b>${T.disp}</b></div>
+    </div></section>
+    <section class="panel"><h2>Resum mensual ${y}</h2><p class="lead">Recompte per tipus de dia cada mes i acumulat de l'any. "Lliurances" compta els dies que lliures per compensació aquell mes.</p>
+    <div class="scroll"><table class="sit"><thead><tr><th>Mes</th><th>Disponibilitat facilitada</th><th>Assignats</th><th>Objectiu</th><th>Diferència</th><th>Pendents</th><th>Descartats</th><th>Comp. informades</th><th>Comp. per informar</th><th>Lliurances</th><th>Vacances</th><th>Assignats acumulat</th><th>Objectiu acumulat</th></tr></thead><tbody>
+    ${rows.map(r=>{const d=r.asig-r.obj,isCur=`${y}-${pad(r.mes)}`===mesAct;return `<tr class="${isCur?"cur":""}"><td class="cap">${MESES[r.mes-1]}</td>${cell(r.disp)}${cell(r.asig)}${cell(r.obj)}${cell(dif(d),d<0?"warntxt":d>0?"oktxt":"")}${cell(r.pend,r.pend?"warntxt":"")}${cell(r.desc)}${cell(r.ci)}${cell(r.cp,r.cp?"badtxt":"")}${cell(r.lib)}${cell(r.vac)}${cell(r.acA)}${cell(r.acO)}</tr>`}).join("")}
+    </tbody><tfoot><tr><th>Total ${y}</th>${cell(T.disp)}${cell(T.asig)}${cell(T.obj)}${cell(dif(T.asig-T.obj),T.asig<T.obj?"warntxt":"oktxt")}${cell(T.pend)}${cell(T.desc)}${cell(T.ci)}${cell(T.cp,T.cp?"badtxt":"")}${cell(T.lib)}${cell(T.vac)}${cell(acA)}${cell(acO)}</tr></tfoot></table></div></section>
+    <div class="grid-half">
+      <section class="panel"><h3>Propers dies assignats</h3>${lista(prox,e=>hor(e))}</section>
+      <section class="panel"><h3>Pendents de confirmar</h3>${lista(pend,e=>hor(e))}</section>
+      <section class="panel ${cp.length?"alert":""}"><h3>Compensacions per informar</h3>${lista(cp,e=>e.comp?.fecha?"lliura "+fCorta(e.comp.fecha):"sense dia de lliurança")}${cp.length&&p===mePid()?`<p><button class="btn sm primary" data-a="tab" data-v="mis">Informa-les</button></p>`:""}</section>
+    </div></div>`;
+}
+
+
+/* ---------- mi perfil: cambiar de vista ---------- */
+function vPerfil(){
+  const aud=auditores(),rp=realPid(),def=(rp&&aud.includes(rp))?rp:aud[0]||"";
+  const sel=S.verComo&&aud.includes(S.verComo)?S.verComo:def,sim=simulando();
+  const filas=[["Calendari","Tot l'equip, cobertura i buits","Només els seus dies, les seves vacances i els dies que necessiten auditors"],
+    ["Pendents de validar","Validar, assignar i descartar","Sense accés"],
+    ["La meva disponibilitat","Si també és auditor/a","Enviar i retirar la seva disponibilitat i informar les seves compensacions"],
+    ["Situació","Qualsevol auditor/a","Només la seva"],
+    ["Vacances","Les de qualsevol auditor/a i les de l'equip","Només les seves"],
+    ["Informe","Informes per dates en Excel i PDF","Sense accés"],
+    ["Objectius i regles","Objectius per mes, mínims i dies especials","Sense accés"],
+    ["Equip i rols","Altes, baixes i canvi de rol","Sense accés"]];
+  return `<div class="grid2"><div class="stack"><section class="panel"><h2>El meu perfil</h2>
+    <p class="lead">${esc(rp?nombre(rp):"Propietari/ària")} · ${realAuditor()?"gestor/a i auditor/a":"gestor/a"}. Canvia de vista per comprovar què veu i què pot fer cada perfil.</p>
+    <div class="seg" role="group" aria-label="Vista"><button data-a="vista" data-v="gestor" aria-pressed="${!sim}">Mostra com a gestor/a</button><button data-a="vista" data-v="auditor" aria-pressed="${sim}" ${aud.length?"":"disabled"}>Mostra com a auditor/a</button></div>
+    <label class="f mt" style="max-width:320px">Auditor/a que vols veure<select id="ver-como">${aud.map(q=>`<option value="${esc(q)}" ${q===sel?"selected":""}>${esc(nombre(q))}${q===rp?" (tu)":""}</option>`).join("")}</select></label>
+    <p class="hint">${rp&&aud.includes(rp)?"Si tries el teu propi nom, treballes amb les teves dades reals d'auditor/a.":""} Amb una altra persona és una vista prèvia: veus exactament el que veu ella, però no es desa cap canvi.</p></section>
+    <section class="panel"><h3>Què pot fer cada perfil</h3><div class="scroll"><table><thead><tr><th>Pestanya</th><th>Gestor/a</th><th>Auditor/a</th></tr></thead><tbody>
+    ${filas.map(f=>`<tr><td><b>${f[0]}</b></td><td>${f[1]}</td><td class="${f[2]==="Sense accés"?"muted":""}">${f[2]}</td></tr>`).join("")}</tbody></table></div></section></div>
+    <aside class="stack"><section class="panel"><h3>Vista actual</h3><div class="big">${sim?"Auditor/a":"Gestor/a"}</div><p class="hint">${sim?esc(nombre(S.verComo)):"Accés a tota la informació"}</p></section></aside></div>`;
+}
+
+
+/* ---------- informe (gestor) ---------- */
+const fDMY=s=>s?s.split("-").reverse().join("/"):"";
+function infDefaults(){const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),1),b=new Date(n.getFullYear(),n.getMonth()+1,0);return {desde:iso(a),hasta:iso(b),pid:"todos",ocultar:true}}
+function datosInforme(){
+  const I=S.inf,ids=I.pid==="todos"?auditores():[I.pid];
+  const grups=ids.map(p=>({pid:p,rows:entradas().filter(e=>e.pid===p&&e.estado==="asignado"&&e.fecha>=I.desde&&e.fecha<=I.hasta).sort((x,y)=>x.fecha.localeCompare(y.fecha))}))
+    .filter(g=>!I.ocultar||g.rows.length);
+  const all=grups.flatMap(g=>g.rows);
+  return {grups,total:all.length,inf:all.filter(e=>compOk(e.comp)).length,pend:all.filter(e=>!compOk(e.comp)).length};
+}
+const compEstado=e=>compOk(e.comp)?"Informada":e.comp?.fecha?"Falta unitat/territori":"Sense informar";
+const hora=(a,b)=>a?`${a}-${b}`:"";
+const filaAud=e=>[fDMY(e.fecha),hora(e.inicio,e.fin),fDMY(e.comp?.fecha),e.comp?.recurso||"",e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)];
+const CAPS_DET=["Dia d'auditoria","Horari","Dia que compensa","Unitat on compensa","Territori","Horari de compensació","Estat"];
+function vInforme(){
+  if(!S.inf) S.inf=infDefaults();
+  const I=S.inf,D=datosInforme(),bad=I.hasta<I.desde;
+  return `<div class="stack"><section class="panel"><h2>Informe de dies d'auditoria i compensacions</h2>
+    <p class="lead">Per a cada auditor/a, els dies d'auditoria del període amb el dia que compensa i la unitat on compensa.</p>
+    <div class="form">
+      <label class="f">Des de<input id="inf-desde" type="date" value="${I.desde}"></label>
+      <label class="f">Fins a<input id="inf-hasta" type="date" value="${I.hasta}"></label>
+      <label class="f">Auditor/a<select id="inf-pid"><option value="todos">Tots</option>${auditores().map(p=>`<option value="${esc(p)}" ${I.pid===p?"selected":""}>${esc(nombre(p))}</option>`).join("")}</select></label>
+      <label class="f chk"><span><input type="checkbox" id="inf-ocultar" ${I.ocultar?"checked":""}> Amaga les persones sense dies</span></label>
+    </div>
+    <div class="toolbar mt" style="margin-bottom:0"><span class="hint" style="margin:0">Ràpid:</span>
+      <button class="btn sm" data-a="infper" data-v="mes">Mes actual</button><button class="btn sm" data-a="infper" data-v="sig">Mes següent</button><button class="btn sm" data-a="infper" data-v="ano">Any actual</button>
+      <span class="push acts"><button class="btn sm primary" data-a="infxlsx">Descarrega Excel</button><button class="btn sm primary" data-a="infpdf">Descarrega PDF</button><button class="btn sm" data-a="infcopy">Copia l'informe</button></span></div></section>
+    ${bad?`<p class="notice">La data final és anterior a la inicial. Corregeix les dates.</p>`:`
+    <div class="stats">
+      <div class="stat"><span>Període</span><b style="font-size:20px">${fDMY(I.desde)} – ${fDMY(I.hasta)}</b></div>
+      <div class="stat"><span>Dies d'auditoria</span><b>${D.total}</b></div>
+      <div class="stat"><span>Compensacions informades</span><b>${D.inf}</b></div>
+      <div class="stat ${D.pend?"bad":""}"><span>Compensacions per informar</span><b>${D.pend}</b></div>
+    </div>
+    ${D.grups.length?D.grups.map(g=>`<section class="panel"><div class="toolbar" style="margin-bottom:8px"><h2>${esc(nombre(g.pid))}</h2><span class="push mono">${g.rows.length} dia(es) d'auditoria${g.rows.filter(e=>!compOk(e.comp)).length?` · <span class="badtxt">${g.rows.filter(e=>!compOk(e.comp)).length} per informar</span>`:""}</span></div>
+      ${g.rows.length?`<div class="scroll"><table class="inf"><thead><tr>${CAPS_DET.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>
+      ${g.rows.map(e=>`<tr><td class="mono"><b>${fDMY(e.fecha)}</b> <span class="muted">${esc(parse(e.fecha).toLocaleDateString("ca-ES",{weekday:"short"}))}</span></td><td class="mono">${esc(hora(e.inicio,e.fin))}</td><td class="mono">${fDMY(e.comp?.fecha)}</td><td>${esc(e.comp?.recurso||"")}</td><td>${esc(e.comp?.territorio||"")}</td><td class="mono">${esc(hora(e.comp?.inicio,e.comp?.fin))}</td><td class="${compOk(e.comp)?"oktxt":"badtxt"}">${compEstado(e)}</td></tr>`).join("")}
+      </tbody></table></div>`:`<p class="empty">Sense dies d'auditoria en aquest període.</p>`}</section>`).join(""):`<section class="panel"><p class="empty">No hi ha dies d'auditoria en aquestes dates.</p></section>`}`}</div>`;
+}
+function textInforme(){
+  const D=datosInforme(),M=metaInforme(),out=[`Dies d'auditoria i compensacions · ${M.per}`,""];
+  for(const g of D.grups){out.push(`${nombre(g.pid)} (${g.rows.length} dia/es d'auditoria)`);out.push(CAPS_DET.join("\t"));for(const e of g.rows)out.push(filaAud(e).join("\t"));out.push("")}
+  return out.join("\n");
+}
+
+/* ---------- exportar informe (Excel / PDF) ---------- */
+const LIBS={
+  exceljs:["https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js","https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"],
+  jspdf:["https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js","https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"],
+  autotable:["https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js","https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"]};
+const _libs={};
+function cargar(name,ok){
+  if(ok())return Promise.resolve();
+  if(_libs[name])return _libs[name];
+  return _libs[name]=(async()=>{for(const u of LIBS[name]){try{await new Promise((res,rej)=>{const sc=document.createElement("script");sc.src=u;sc.onload=res;sc.onerror=rej;document.head.appendChild(sc)});if(ok())return}catch(e){}}_libs[name]=null;throw new Error("lib")})();
+}
+function metaInforme(){
+  const I=S.inf,ahora=new Date();
+  return {gen:`${pad(ahora.getDate())}/${pad(ahora.getMonth()+1)}/${ahora.getFullYear()} ${pad(ahora.getHours())}:${pad(ahora.getMinutes())}`,
+    per:`${fDMY(I.desde)} - ${fDMY(I.hasta)}`,aud:I.pid==="todos"?"Tots els auditors":nombre(I.pid),
+    file:`informe-auditories-SEM_${I.desde}_${I.hasta}`};
+}
+function logoPNG(){
+  const c=document.createElement("canvas");c.width=560;c.height=120;const x=c.getContext("2d");
+  x.fillStyle="#ffffff";x.fillRect(0,0,560,120);
+  x.fillStyle="#1d2226";x.font="bold 40px 'Segoe UI', Arial, sans-serif";x.textBaseline="alphabetic";x.fillText("emergències mèdiques",4,44);
+  x.fillStyle="#d4192c";for(let i=0;i<4;i++)x.fillRect(6+i*58,70,30,30);
+  return c.toDataURL("image/png").split(",")[1];
+}
+async function guardarArchivo(filename,data){
+  if(!S.dl){toast("La descàrrega de fitxers no està disponible en aquesta vista");return}
+  try{await S.dl.save({filename,data});toast("Informe descarregat")}
+  catch(e){toast(e?.code==="declined"?"Descàrrega cancel·lada":e?.code==="extension_not_enabled"?"Aquest format no està disponible aquí":"No s'ha pogut descarregar l'informe")}
+}
+async function exportar(tipo){
+  if(!S.inf||S.inf.hasta<S.inf.desde){toast("Revisa les dates de l'informe");return}
+  if(S.exportando)return;S.exportando=true;toast(tipo==="pdf"?"Generant el PDF…":"Generant l'Excel…");
+  try{
+    if(tipo==="xlsx"){await cargar("exceljs",()=>!!window.ExcelJS);await guardarArchivo(metaInforme().file+".xlsx",await crearXLSX())}
+    else{await cargar("jspdf",()=>!!window.jspdf?.jsPDF);await cargar("autotable",()=>!!window.jspdf?.jsPDF?.API?.autoTable);await guardarArchivo(metaInforme().file+".pdf",crearPDF())}
+  }catch(e){toast("No s'ha pogut generar l'informe. Comprova la connexió i torna-ho a provar.")}
+  finally{S.exportando=false}
+}
+async function crearXLSX(){
+  const M=metaInforme(),D=datosInforme(),wb=new ExcelJS.Workbook();wb.creator="SEM · Planificació d'auditories";wb.created=new Date();
+  const logo=wb.addImage({base64:logoPNG(),extension:"png"});
+  const RED="FFD4192C",DARK="FF23282D",GREY="FFF1F2F4",ALT="FFF7F8F9",F={name:"Arial",size:10};
+  const dt=s=>{if(!s)return null;const[y,m,d]=s.split("-").map(Number);return new Date(Date.UTC(y,m-1,d))};
+  const COLS=[{w:16,date:1},{w:13},{w:16,date:1},{w:28},{w:22},{w:18},{w:24}],N=COLS.length,last="G";
+  const ws=wb.addWorksheet("Informe",{pageSetup:{orientation:"landscape",paperSize:9,fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.4,right:.4,top:.5,bottom:.5,header:.2,footer:.2}},views:[{showGridLines:false}]});
+  ws.columns=COLS.map(c=>({width:c.w}));
+  for(let r=1;r<=8;r++)ws.getRow(r).font=F;
+  ws.getRow(1).height=18;ws.getRow(2).height=24;ws.getRow(3).height=18;ws.getRow(4).height=16;
+  ws.addImage(logo,{tl:{col:0.1,row:0.6},ext:{width:220,height:47}});
+  ws.getCell("C2").value="Dies d'auditoria i compensacions";ws.getCell("C2").font={name:"Arial",size:16,bold:true,color:{argb:"FF1D2226"}};
+  ws.getCell("C3").value="Planificació d'auditories · SEM";ws.getCell("C3").font={name:"Arial",size:10,color:{argb:"FF1D2226"}};
+  [["INFORME D'AUDITORIES",true],[`Generat: ${M.gen}`],[`Període: ${M.per}`],[`Auditor/a: ${M.aud}`]].forEach(([t,b],i)=>{const c=ws.getCell(1+i,N);c.value=t;c.font={name:"Arial",size:8,bold:!!b,color:{argb:b?"FF3A3F44":"FF4A5056"}};c.alignment={horizontal:"right"}});
+  ws.getRow(5).height=6;for(let c=1;c<=N;c++)ws.getCell(5,c).border={bottom:{style:"medium",color:{argb:RED}}};
+  let r=7;
+  const seccio=t=>{ws.mergeCells(`A${r}:${last}${r}`);const h=ws.getCell(`A${r}`);h.value=t;h.font={name:"Arial",size:11,bold:true};h.fill={type:"pattern",pattern:"solid",fgColor:{argb:GREY}};h.border={left:{style:"thick",color:{argb:RED}}};h.alignment={vertical:"middle",indent:1};ws.getRow(r).height=22;r+=2};
+  const capcalera=(caps,al)=>{const row=ws.getRow(r);caps.forEach((c,i)=>{const x=row.getCell(i+1);x.value=c;x.font={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};x.fill={type:"pattern",pattern:"solid",fgColor:{argb:DARK}};x.alignment={vertical:"middle",horizontal:al&&al[i]?"right":"left",wrapText:true}});row.height=26;r++};
+  const fila=(vals,j,opts={})=>{const row=ws.getRow(r);vals.forEach((v,i)=>{const x=row.getCell(i+1);x.value=v;x.font={...F,...(opts.bold?{bold:true}:{}),...(opts.red&&opts.red(i,v)?{color:{argb:RED}}:{})};x.alignment={vertical:"top",horizontal:opts.right&&opts.right[i]?"right":"left",wrapText:true};if(opts.date&&opts.date[i])x.numFmt="dd/mm/yyyy";if(j%2)x.fill={type:"pattern",pattern:"solid",fgColor:{argb:ALT}};x.border=opts.total?{top:{style:"medium",color:{argb:"FF1D2226"}}}:{bottom:{style:"hair",color:{argb:"FFCFD4D9"}}}});r++};
+  // 1. Resum
+  seccio("1. RESUM PER AUDITOR");
+  const al=[0,1,1,1];
+  capcalera(["Auditor/a","Dies d'auditoria","Compensacions informades","Per informar"],al);
+  D.grups.forEach((g,j)=>{const p=g.rows.filter(e=>!compOk(e.comp)).length;fila([nombre(g.pid),g.rows.length,g.rows.length-p,p||null],j,{right:al,red:(i,v)=>i===3&&v})});
+  fila(["Total",D.total,D.inf,D.pend||null],0,{right:al,bold:true,total:true});
+  r++;
+  // 2. Detall per auditor
+  seccio("2. DETALL PER AUDITOR");
+  for(const g of D.grups){
+    ws.mergeCells(`A${r}:${last}${r}`);const t=ws.getCell(`A${r}`);t.value=`${nombre(g.pid)} · ${g.rows.length} dia(es) d'auditoria`;t.font={name:"Arial",size:11,bold:true,color:{argb:"FF1D2226"}};t.border={bottom:{style:"thin",color:{argb:RED}}};ws.getRow(r).height=20;r++;
+    if(!g.rows.length){ws.getCell(`A${r}`).value="Sense dies d'auditoria en aquest període.";ws.getCell(`A${r}`).font={...F,italic:true};r+=2;continue}
+    capcalera(CAPS_DET);
+    g.rows.forEach((e,j)=>fila([dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),e.comp?.recurso||"",e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)],j,{date:[1,0,1],red:(i,v)=>i===6&&v!=="Informada"}));
+    r++;
+  }
+  ws.headerFooter.oddFooter="&L&8SEM · Planificació d'auditories&R&8Pàgina &P de &N";
+  // Full de dades per filtrar
+  const wd=wb.addWorksheet("Dades",{views:[{state:"frozen",ySplit:1}]});
+  wd.columns=[{header:"Auditor/a",width:24},...CAPS_DET.map((h,i)=>({header:h,width:COLS[i].w}))];
+  wd.getRow(1).eachCell(x=>{x.font={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};x.fill={type:"pattern",pattern:"solid",fgColor:{argb:DARK}};x.alignment={wrapText:true,vertical:"middle"}});
+  for(const g of D.grups)for(const e of g.rows){const row=wd.addRow([nombre(g.pid),dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),e.comp?.recurso||"",e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)]);row.font=F;row.getCell(2).numFmt="dd/mm/yyyy";row.getCell(4).numFmt="dd/mm/yyyy"}
+  wd.autoFilter={from:"A1",to:"H1"};
+  return await wb.xlsx.writeBuffer();
+}
+function crearPDF(){
+  const M=metaInforme(),D=datosInforme(),{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"}),W=297,L=14,Rr=W-14;
+  const RED=[212,25,44],INK=[29,34,38],MUT=[93,102,110];
+  const marca=(x,y,s)=>{doc.setFont("helvetica","bold");doc.setFontSize(s);doc.setTextColor(...INK);doc.text("emergències mèdiques",x,y);doc.setFillColor(...RED);const q=s*0.3;for(let i=0;i<4;i++)doc.rect(x+0.4+i*q*1.9,y+2.6,q,q,"F")};
+  marca(L,26,17);
+  doc.setFont("helvetica","bold");doc.setFontSize(17);doc.setTextColor(...INK);doc.text("Dies d'auditoria i compensacions",100,24);
+  doc.setFont("helvetica","normal");doc.setFontSize(10);doc.text("Planificació d'auditories · SEM",100,31);
+  doc.setFontSize(8);doc.setTextColor(58,63,68);doc.setFont("helvetica","bold");doc.text("INFORME D'AUDITORIES",Rr,14,{align:"right"});
+  doc.setFont("helvetica","normal");doc.setTextColor(...MUT);
+  [`Generat: ${M.gen}`,`Període: ${M.per}`,`Auditor/a: ${M.aud}`,"Contingut: resum, detall per auditor"].forEach((t,i)=>doc.text(t,Rr,18.5+i*4.2,{align:"right"}));
+  doc.setDrawColor(...RED);doc.setLineWidth(0.6);doc.line(L,38,Rr,38);
+  const seccio=(y,t)=>{doc.setFillColor(241,242,244);doc.rect(L,y,Rr-L,8,"F");doc.setFillColor(...RED);doc.rect(L,y,1.6,8,"F");doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(...INK);doc.text(t,L+4.5,y+5.6)};
+  const est={theme:"grid",margin:{left:L,right:14,top:24,bottom:16},styles:{font:"helvetica",fontSize:8.5,cellPadding:1.8,textColor:INK,lineColor:[223,227,231],lineWidth:0.1,valign:"top"},
+    headStyles:{fillColor:[35,40,45],textColor:255,fontStyle:"bold",lineWidth:0},alternateRowStyles:{fillColor:[247,248,249]},footStyles:{fillColor:[255,255,255],textColor:INK,fontStyle:"bold"},
+    didDrawPage:d=>{if(doc.getCurrentPageInfo().pageNumber>1){marca(L,13,9);doc.setFont("helvetica","bold");doc.setFontSize(9);doc.setTextColor(...INK);doc.text("Dies d'auditoria i compensacions · "+M.per,Rr,13,{align:"right"});doc.setDrawColor(...RED);doc.setLineWidth(0.4);doc.line(L,19,Rr,19)}}};
+  seccio(44,"1. RESUM PER AUDITOR");
+  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(...MUT);
+  doc.text(`Període ${M.per} · ${D.total} dies d'auditoria · ${D.inf} compensacions informades · ${D.pend} per informar`,L,58);
+  doc.autoTable({...est,startY:62,tableWidth:170,
+    head:[["Auditor/a","Dies d'auditoria","Compensacions informades","Per informar"]],
+    body:D.grups.length?D.grups.map(g=>{const p=g.rows.filter(e=>!compOk(e.comp)).length;return [nombre(g.pid),g.rows.length,g.rows.length-p,p||""]}):[["Sense dades en aquestes dates.","","",""]],
+    foot:[["Total",D.total,D.inf,D.pend||""]],
+    columnStyles:{0:{cellWidth:62,fontStyle:"bold"},1:{halign:"right"},2:{halign:"right"},3:{halign:"right",textColor:RED}},
+    didParseCell:d=>{if(d.section!=="body"&&d.column.index>0)d.cell.styles.halign="right"}});
+  let y=doc.lastAutoTable.finalY+12;if(y>175){doc.addPage();y=26}
+  seccio(y,"2. DETALL PER AUDITOR");y+=13;
+  for(const g of D.grups){
+    if(y>178){doc.addPage();y=26}
+    doc.setFont("helvetica","bold");doc.setFontSize(10.5);doc.setTextColor(...INK);doc.text(nombre(g.pid),L,y);
+    doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(...MUT);doc.text(`${g.rows.length} dia(es) d'auditoria`,Rr,y,{align:"right"});
+    doc.setDrawColor(...RED);doc.setLineWidth(0.3);doc.line(L,y+1.5,Rr,y+1.5);
+    if(!g.rows.length){doc.setFontSize(8.5);doc.text("Sense dies d'auditoria en aquest període.",L,y+7);y+=14;continue}
+    doc.autoTable({...est,startY:y+3.5,head:[CAPS_DET],body:g.rows.map(filaAud),
+      columnStyles:{0:{cellWidth:30,fontStyle:"bold"},1:{cellWidth:26},2:{cellWidth:30},3:{cellWidth:58},4:{cellWidth:44},5:{cellWidth:34}},
+      didParseCell:d=>{if(d.section==="body"&&d.column.index===6&&d.cell.raw!=="Informada")d.cell.styles.textColor=RED}});
+    y=doc.lastAutoTable.finalY+9;
+  }
+  const np=doc.getNumberOfPages();
+  for(let i=1;i<=np;i++){doc.setPage(i);doc.setDrawColor(207,212,217);doc.setLineWidth(0.2);doc.line(L,200,Rr,200);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(...MUT);
+    doc.text("SEM · Planificació d'auditories · Generat "+M.gen,L,204.5);doc.text(`Pàgina ${i} de ${np}`,Rr,204.5,{align:"right"})}
+  return doc.output("arraybuffer");
+}
+
+/* ---------- objetivos y reglas (gestor) ---------- */
+function vObjetivos(){
+  const mes=ym(S.cursor),dis=S.demo?"disabled":"";
+  const especiales=Object.entries(S.cfg.minDias||{}).filter(([k,v])=>Number.isFinite(v)).sort((a,b)=>a[0].localeCompare(b[0]));
+  return `<div class="stack">
+  <section class="panel"><div class="toolbar"><h2>Objectius · <span class="cap">${esc(fMes(S.cursor))}</span></h2><span class="seg push"><button data-a="navmes" data-v="-1" aria-label="Mes anterior">‹</button><button data-a="mesact">Mes actual</button><button data-a="navmes" data-v="1" aria-label="Mes següent">›</button></span></div>
+    <p class="lead">L'objectiu general és de ${S.cfg.objetivoDefecto} dies al mes. Si canvies el d'un auditor aquí, només s'aplica a ${esc(fMes(S.cursor))}. Deixa la casella buida per tornar al general.</p>
+    <div class="scroll"><table><thead><tr><th>Auditor/a</th><th>Objectiu del mes</th><th>Assignats</th><th>Restants</th><th>Pendents</th><th>Sense compensació</th><th>Dies de vacances</th></tr></thead><tbody>
+    ${auditores().map(p=>{const a=asignadosMes(p,mes),ov=objOverride(p,mes),o=objetivo(p,mes),m=S.dias.get(p)||new Map();let pe=0,sc=0;for(const[f,d]of m){if(!f.startsWith(mes))continue;if(d.estado==="pendiente")pe++;if(d.estado==="asignado"&&!compOk(d.comp))sc++}
+      return `<tr><td>${esc(nombre(p))}</td><td><input type="number" min="0" max="31" id="obj-${esc(p)}" data-obj="${esc(p)}" value="${ov??""}" placeholder="${S.cfg.objetivoDefecto}" aria-label="Objectiu de ${esc(nombre(p))}" ${dis}>${ov!==null?` <span class="tag">només aquest mes</span>`:""}</td>
+      <td class="mono">${a}</td><td class="mono ${a<o?"warntxt":"oktxt"}">${Math.max(0,o-a)}</td><td class="mono">${pe}</td><td class="mono ${sc?"badtxt":""}">${sc}</td><td class="mono">${vacDiasMes(p,mes)||""}</td></tr>`}).join("")}
+    </tbody></table></div></section>
+  <div class="grid-half">
+  <section class="panel"><h2>Regles generals</h2>
+    <form class="form mt" data-form="cfg">
+      <label class="f">Mínim de professionals per dia<input id="cfg-min" name="minPorDia" type="number" min="1" max="30" value="${S.cfg.minPorDia}" ${dis}></label>
+      <label class="f">Objectiu mensual general (dies)<input id="cfg-obj" name="objetivoDefecto" type="number" min="0" max="31" value="${S.cfg.objetivoDefecto}" ${dis}></label>
+      <div><button class="btn primary" ${dis}>Desa les regles</button></div></form></section>
+  <section class="panel"><h2>Dies amb mínim especial</h2><p class="lead">Per a dies concrets en què necessites més auditors.</p>
+    <form class="form" data-form="minday">
+      <label class="f">Dia<input id="md-fecha" name="fecha" type="date" required></label>
+      <label class="f">Mínim d'auditors<input id="md-min" name="min" type="number" min="1" max="30" required value="${S.cfg.minPorDia+1}"></label>
+      <div><button class="btn primary" ${dis}>Afegeix</button></div></form>
+    ${especiales.length?`<div class="list mt">${especiales.map(([k,v])=>`<div class="item"><div><div class="t">★ ${esc(fLarga(k))}</div><div class="s">Mínim ${v} auditors</div></div><div class="acts"><button class="btn sm" data-a="ir" data-v="${k}">Mostra el dia</button>${S.demo?"":`<button class="btn sm danger" data-a="delmin" data-v="${k}">Treu</button>`}</div></div>`).join("")}</div>`:`<p class="empty">No hi ha dies amb mínim especial.</p>`}</section></div></div>`;
+}
+
+/* ---------- equipo (gestor) ---------- */
+function vEquipo(){
+  const ids=Object.keys(S.equipo).sort(porNombre),dis=S.demo?"disabled":"";
+  return `<div class="stack"><section class="panel"><h2>Equip i rols</h2>
+  <p class="lead">El rol de gestor/a dona accés a totes les gestions. El rol d'auditor/a permet introduir la seva disponibilitat, les seves vacances i les seves compensacions. Una persona pot tenir tots dos.</p>
+  <div class="scroll"><table><thead><tr><th>Nom</th><th>Auditor/a</th><th>Gestor/a</th><th>Compte vinculat</th><th></th></tr></thead><tbody>
+  ${ids.map(p=>{const q=S.equipo[p],acc=q.uid?(S.names.get(q.uid)||"Vinculat"):"";
+    return `<tr><td><input class="wide" id="eq-n-${esc(p)}" data-eqname="${esc(p)}" value="${esc(q.nombre)}" aria-label="Nom" ${dis}></td>
+    <td><input type="checkbox" id="eq-a-${esc(p)}" data-eqrole="auditor" data-p="${esc(p)}" ${q.auditor?"checked":""} aria-label="Auditor" ${dis}></td>
+    <td><input type="checkbox" id="eq-g-${esc(p)}" data-eqrole="gestor" data-p="${esc(p)}" ${q.gestor?"checked":""} aria-label="Gestor" ${dis}></td>
+    <td>${q.uid?`${esc(acc)}${q.uid===S.uid?" (tu)":""} ${S.demo?"":`<button class="btn sm" data-a="unlink" data-p="${esc(p)}">Desvincula</button>`}`:`<span class="muted">Sense vincular</span>`}</td>
+    <td>${S.demo?"":`<button class="btn sm danger" data-a="delpers" data-p="${esc(p)}">Elimina</button>`}</td></tr>`}).join("")}
+  </tbody></table></div>
+  <form class="form mt" data-form="addpers"><label class="f">Persona nova<input id="np-nombre" name="nombre" required maxlength="60" placeholder="Nom i cognom"></label>
+    <label class="f chk"><span><input type="checkbox" id="np-a" name="auditor" checked> Auditor/a</span></label>
+    <label class="f chk"><span><input type="checkbox" id="np-g" name="gestor"> Gestor/a</span></label>
+    <div><button class="btn primary" ${dis}>Afegeix a l'equip</button></div></form>
+  ${window.SEM_AUTH&&S.owner?`<div class="addday mt"><h3>Importa dades inicials</h3><p class="hint">Carrega el fitxer dades-inicials.json per omplir l'equip, les regles i els dies ja planificats. Sobreescriu el que hi hagi.</p><input type="file" id="imp-file" accept=".json,application/json"></div>`:""}
+  <p class="hint">Cada persona vincula el seu nom el primer cop que obre l'aplicació. Si algú s'equivoca de nom, prem "Desvincula" i que torni a entrar.</p></section></div>`;
+}
+
+/* ---------- escrituras ---------- */
+const dref=(p,f)=>S.db.doc(`disp/${p}/dias/${f}`);
+const saveCfg=c=>S.db.doc("config/planificacion").set(c);
+const saveEq=e=>S.db.doc("config/equipo").set({personas:e});
+async function guarda(fn,ok){
+  if(S.demo){toast("A la vista d'exemple no es desen els canvis");return}
+  if(preview()){toast(`Vista prèvia com a ${nombre(S.verComo)}: no es desen els canvis`);return}
+  if(S.busy)return;S.busy=true;
+  try{await fn();if(ok)toast(ok)}
+  catch(e){toast(e?.code==="permission_denied"||e?.code==="invalid_argument"?"No tens permís per fer aquest canvi.":"No s'ha pogut desar. Revisa la connexió i torna-ho a provar.")}
+  finally{S.busy=false}
+}
+function confirmar(b,txt){if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent=txt;return false}return true}
+
+document.addEventListener("click",ev=>{
+  const b=ev.target.closest("[data-a]");if(!b||b.disabled)return;
+  const a=b.dataset.a,v=b.dataset.v,p=b.dataset.p,f=b.dataset.f;
+  if(a==="tab"){S.tab=v;remember();render();window.scrollTo(0,0);return}
+  if(a==="mode"){S.mode=v;remember();render();return}
+  if(a==="hoy"){S.cursor=new Date();render();return}
+  if(a==="nav"){const n=+v,c=S.cursor;S.cursor=S.mode==="dia"?addDays(c,n):S.mode==="semana"?addDays(c,7*n):S.mode==="mes"?new Date(c.getFullYear(),c.getMonth()+n,1):new Date(c.getFullYear()+n,0,1);render();return}
+  if(a==="navmes"){S.cursor=new Date(S.cursor.getFullYear(),S.cursor.getMonth()+(+v),1);render();return}
+  if(a==="mesact"){S.cursor=new Date();render();return}
+  if(a==="ir"){S.cursor=parse(v);S.mode="dia";S.tab="calendario";remember();render();window.scrollTo(0,0);return}
+  if(a==="irmes"){S.cursor=new Date(S.cursor.getFullYear(),+v,1);S.mode="mes";remember();render();return}
+  if(a==="vista"){if(v==="auditor"){const aud=auditores(),rp=realPid(),sel=$("ver-como")?.value;S.verComo=sel||((rp&&aud.includes(rp))?rp:aud[0]||null);S.vista="auditor";S.tab="calendario"}else{S.vista="gestor";S.tab="perfil"}S.filtro="todos";S.editComp=null;remember();render();window.scrollTo(0,0);toast(v==="auditor"?`Vista d'auditor/a: ${nombre(S.verComo)}`:"Vista de gestor/a");return}
+  if(a==="infper"){const n=new Date(),y=n.getFullYear(),m=n.getMonth();const[a1,b1]=v==="mes"?[new Date(y,m,1),new Date(y,m+1,0)]:v==="sig"?[new Date(y,m+1,1),new Date(y,m+2,0)]:[new Date(y,0,1),new Date(y,11,31)];S.inf={...S.inf,desde:iso(a1),hasta:iso(b1)};render();return}
+  if(a==="infxlsx"){exportar("xlsx");return}
+  if(a==="infpdf"){exportar("pdf");return}
+  if(a==="infcopy"){navigator.clipboard.writeText(textInforme()).then(()=>toast("Informe copiat: enganxa'l a l'Excel o en un correu")).catch(()=>toast("No s'ha pogut copiar. Selecciona la taula i copia-la manualment."));return}
+  if(a==="sitano"){S.sitYear+=(+v);render();return}
+  if(a==="skiplink"){S.skipLink=true;render();return}
+  if(a==="estado"){
+    if(v==="asignado"&&enVac(p,f)){toast("No es pot assignar: està de vacances aquell dia");return}
+    guarda(()=>dref(p,f).update({estado:v,revisado:new Date().toISOString()}),v==="asignado"?"Dia assignat":v==="descartado"?"Disponibilitat descartada":"Tornada a pendent");return}
+  if(a==="asigntodo"){const l=pendientes().filter(e=>e.fecha===v&&!enVac(e.pid,v));
+    guarda(async()=>{for(const e of l)await dref(e.pid,v).update({estado:"asignado",revisado:new Date().toISOString()})},`${l.length} disponibilitat(s) assignada(es)`);return}
+  if(a==="editcomp"){S.editComp=v;render();return}
+  if(a==="cancelcomp"){S.editComp=null;render();return}
+  if(a==="borrar"){if(!confirmar(b,"Segur? Retira"))return;guarda(()=>dref(p,f).delete(),"Disponibilitat retirada");return}
+  if(a==="delvac"){if(!confirmar(b,"Segur? Elimina"))return;const l=(S.vac.get(p)||[]).filter(x=>x.id!==v);guarda(()=>S.db.doc(`vacaciones/${p}`).set({periodos:l}),"Vacances eliminades");return}
+  if(a==="delmin"){const c=clone(S.cfg);delete c.minDias[v];guarda(()=>saveCfg(c),"Mínim del dia restablert");return}
+  if(a==="unlink"){if(!confirmar(b,"Segur? Desvincula"))return;const e=clone(S.equipo);e[p].uid=null;guarda(()=>saveEq(e),"Compte desvinculat");return}
+  if(a==="delpers"){
+    if(S.equipo[p].gestor&&gestores().length<=1){toast("Ha de quedar com a mínim un gestor/a");return}
+    if(!confirmar(b,"Segur? Elimina"))return;const e=clone(S.equipo);delete e[p];guarda(()=>saveEq(e),"Persona eliminada de l'equip");return}
+});
+document.addEventListener("change",ev=>{
+  const t=ev.target;
+  if(t.id==="filtro"){S.filtro=t.value;render();return}
+  if(t.id==="ver-como"){S.verComo=t.value;remember();if(simulando()){toast(`Vista d'auditor/a: ${nombre(t.value)}`)}render();return}
+  if(t.id&&t.id.startsWith("inf-")){const k=t.id.slice(4);S.inf={...S.inf,[k]:t.type==="checkbox"?t.checked:t.value};render();return}
+  if(t.id==="sit-pid"){S.sitPid=t.value;render();return}
+  if(t.id==="vac-pid"){S.vacPid=t.value;render();return}
+  if(t.id==="d-franja"){const fr=FRANJAS[t.value];if(fr.i){$("d-ini").value=fr.i;$("d-fin").value=fr.f}return}
+  if(t.id==="daymin"){const k=t.dataset.k,v=parseInt(t.value,10);if(!(v>=1))return;const c=clone(S.cfg);c.minDias=c.minDias||{};if(v===c.minPorDia)delete c.minDias[k];else c.minDias[k]=v;guarda(()=>saveCfg(c),`Mínim del dia: ${v}`);return}
+  if(t.dataset.obj){const p=t.dataset.obj,mes=ym(S.cursor),v=t.value===""?null:parseInt(t.value,10);const c=clone(S.cfg);c.objetivosMes=c.objetivosMes||{};c.objetivosMes[mes]=c.objetivosMes[mes]||{};
+    if(v===null||Number.isNaN(v))delete c.objetivosMes[mes][p];else c.objetivosMes[mes][p]=Math.max(0,Math.min(31,v));
+    if(!Object.keys(c.objetivosMes[mes]).length)delete c.objetivosMes[mes];
+    guarda(()=>saveCfg(c),`Objectiu de ${nombre(p)} per a ${fMes(S.cursor)} actualitzat`);return}
+  if(t.dataset.eqname){const p=t.dataset.eqname,n=t.value.trim();if(!n){t.value=nombre(p);return}const e=clone(S.equipo);e[p].nombre=n;guarda(()=>saveEq(e),"Nom actualitzat");return}
+  if(t.dataset.eqrole){const p=t.dataset.p,r=t.dataset.eqrole;
+    if(r==="gestor"&&!t.checked&&gestores().length<=1){t.checked=true;toast("Ha de quedar com a mínim un gestor/a");return}
+    const e=clone(S.equipo);e[p][r]=t.checked;guarda(()=>saveEq(e),`Rol actualitzat: ${nombre(p)}`);return}
+});
+document.addEventListener("submit",ev=>{
+  ev.preventDefault();const f=ev.target,fd=Object.fromEntries(new FormData(f)),me=mePid();
+  const k=f.dataset.form;
+  if(k==="link"){if(!fd.pid)return;guarda(()=>S.db.doc("config/equipo").update({personas:{[fd.pid]:{uid:S.uid}}}),`Benvingut/da, ${nombre(fd.pid)}`);return}
+  if(k==="disp"){
+    if(enVac(me,fd.fecha)){toast("Aquest dia estàs de vacances");return}
+    const ex=S.dias.get(me)?.get(fd.fecha);
+    if(ex&&ex.estado==="asignado"){toast("Aquest dia ja està assignat. Demana al gestor/a que el modifiqui.");return}
+    if(fd.inicio===fd.fin){toast("L'hora d'inici i la de fi no poden coincidir");return}
+    guarda(async()=>{await dref(me,fd.fecha).set({fecha:fd.fecha,franja:fd.franja,inicio:fd.inicio,fin:fd.fin,nota:(fd.nota||"").trim(),estado:"pendiente",enviado:new Date().toISOString()});f.reset();$("d-ini").value=FRANJAS.manana.i;$("d-fin").value=FRANJAS.manana.f},"Disponibilitat enviada al gestor/a");return}
+  if(k==="comp"){const p=f.dataset.p,fecha=f.dataset.f;
+    guarda(async()=>{await dref(p,fecha).update({comp:{fecha:fd.fecha,recurso:fd.recurso.trim(),territorio:fd.territorio.trim(),inicio:fd.inicio,fin:fd.fin},compInformada:new Date().toISOString()});S.editComp=null},"Compensació desada");return}
+  if(k==="vac"){const p=S.vacPid;if(fd.hasta<fd.desde){toast("La data final no pot ser anterior a la inicial");return}
+    const l=(S.vac.get(p)||[]).slice();if(l.some(v=>fd.desde<=v.hasta&&v.desde<=fd.hasta)){toast("Se solapa amb un altre període de vacances");return}
+    l.push({id:Date.now().toString(36),desde:fd.desde,hasta:fd.hasta,nota:(fd.nota||"").trim()});
+    guarda(async()=>{await S.db.doc(`vacaciones/${p}`).set({periodos:l});f.reset()},"Vacances registrades");return}
+  if(k==="cfg"){const c=clone(S.cfg);c.minPorDia=Math.max(1,parseInt(fd.minPorDia,10)||2);c.objetivoDefecto=Math.max(0,parseInt(fd.objetivoDefecto,10)||0);guarda(()=>saveCfg(c),"Regles desades");return}
+  if(k==="minday"){const c=clone(S.cfg);c.minDias=c.minDias||{};c.minDias[fd.fecha]=Math.max(1,parseInt(fd.min,10)||1);guarda(async()=>{await saveCfg(c);f.reset()},"Dia amb mínim especial afegit");return}
+  if(k==="addpers"){const n=fd.nombre.trim();if(!n)return;let id=slug(n),i=2;while(S.equipo[id])id=slug(n)+"-"+i++;
+    const e=clone(S.equipo);e[id]={nombre:n,auditor:!!fd.auditor,gestor:!!fd.gestor,uid:null};guarda(async()=>{await saveEq(e);f.reset()},`${n} afegit/da a l'equip`);return}
+});
+
+/* ---------- carga ---------- */
+async function resolveNames(){
+  if(!S.user)return;const ids=Object.values(S.equipo).map(q=>q.uid).filter(Boolean);if(!ids.length)return;
+  try{const ps=await S.user.profiles(ids);for(const id of ids){const n=ps?.[id]?.name;if(n)S.names.set(id,n)}}catch(e){}
+  render();
+}
+function syncSubs(){
+  const want=new Set(auditores());
+  for(const p of want)if(!S.subs.has(p))S.subs.set(p,S.db.collection(`disp/${p}/dias`).onSnapshot(ds=>{const m=new Map();for(const d of ds.docs)m.set(d.id,d.data());S.dias.set(p,m);render()},()=>{}));
+  for(const p of [...S.subs.keys()])if(!want.has(p)){S.subs.get(p)();S.subs.delete(p);S.dias.delete(p)}
+}
+function demo(){S.demo=true;S.loaded=true;S.eqLoaded=true;render()}
+async function start(){
+  render();
+  claude.use("downloads").then(d=>{S.dl=d;render()}).catch(()=>{});
+  const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+  if(!db){demo();return}
+  S.db=db;S.user=user;
+  try{if(user){S.uid=await user.id();S.owner=await user.isOwner();const cw=await user.can("data.write");S.canWrite=cw!==false}}catch(e){}
+  const timer=setTimeout(()=>{S.stale=true;S.loaded=true;render()},10000);
+  db.doc("config/equipo").onSnapshot(s=>{if(!s.metadata.fromCache){clearTimeout(timer);S.stale=false}S.eqLoaded=true;S.loaded=true;S.equipo=s.exists?clone(s.data().personas):{};syncSubs();resolveNames();render()},()=>{clearTimeout(timer);S.stale=true;S.loaded=true;render()});
+  db.doc("config/planificacion").onSnapshot(s=>{if(s.exists){const d=s.data();S.cfg={minPorDia:d.minPorDia||2,minDias:d.minDias||{},objetivoDefecto:Number.isFinite(d.objetivoDefecto)?d.objetivoDefecto:2,objetivosMes:d.objetivosMes||{}}}render()},()=>{});
+  db.collection("vacaciones").onSnapshot(s=>{S.vac=new Map(s.docs.map(d=>[d.id,(d.data().periodos||[])]));render()},()=>{});
+}
+function tick(){const d=new Date();$("hora").textContent=d.toLocaleTimeString("ca-ES",{hour12:false});$("fecha").textContent=d.toLocaleDateString("ca-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
+tick();setInterval(tick,1000);
+start();
+</script>
+
+</body>
+</html>
