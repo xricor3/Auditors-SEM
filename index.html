@@ -87,16 +87,19 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:60
 .cell{background:var(--surface);border:1px solid var(--line);border-radius:6px;min-height:96px;padding:6px;display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left;font:inherit;color:inherit}
 .cell:hover{border-color:var(--sem)}
 .cell.out{opacity:.4}
-.cell.today{border:2px solid var(--sem)}.cell.today .dnum{color:var(--sem)}
+.cell.today .dnum{background:var(--fg);color:var(--surface);border-radius:4px;padding:0 6px}
+.cell.cv-ok{border:2px solid var(--ok)}.cell.cv-part{border:2px solid var(--warn)}.cell.cv-none{border:2px solid var(--bad)}
 .cell .row{display:flex;justify-content:space-between;align-items:center;gap:4px}
 .dnum{font-family:var(--font-display);font-size:18px}
 .cov{font:600 11px var(--font-mono);padding:1px 6px;border-radius:99px}
 .cov.ok{background:var(--ok-bg);color:var(--ok)} .cov.part{background:var(--warn-bg);color:var(--warn)} .cov.none{background:var(--bad-bg);color:var(--bad)}
-.cell.gap{box-shadow:inset 0 -3px 0 var(--bad)}
+
 .chips{display:flex;flex-wrap:wrap;gap:3px}
 .chip{font-size:11.5px;font-weight:600;padding:1px 6px;border-radius:4px;background:var(--sem-soft);color:var(--fg);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .chip.pend{background:transparent;border:1px dashed var(--line);color:var(--muted)}
 .chip.pend::before{content:"? ";}
+.chip.c-ok{background:var(--ok-bg);color:var(--ok)}.chip.c-warn{background:var(--warn-bg);color:var(--warn)}
+.slot.s-ok{border-left-color:var(--ok)}.slot.s-warn{border-left-color:var(--warn)}
 /* week */
 .week{display:grid;grid-template-columns:repeat(7,minmax(130px,1fr));gap:6px;min-width:920px}
 .wcol{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:6px;min-height:220px}
@@ -146,7 +149,7 @@ td input{width:76px}
 .narrow{max-width:560px;margin:24px auto}
 .mt{margin-top:16px}
 .span{grid-column:1/-1}
-.cap{text-transform:capitalize}
+.cap{text-transform:none}.cap::first-letter{text-transform:uppercase}span.cap{display:inline-block}
 .muted{color:var(--muted)}
 .badtxt{color:var(--bad)} .warntxt{color:var(--warn)} .oktxt{color:var(--ok)}
 .nb{display:inline-block;margin-left:7px;background:#fff;color:var(--sem);font-weight:700;font-size:12px;min-width:20px;padding:0 6px;border-radius:99px;text-align:center}
@@ -161,7 +164,7 @@ nav.tabs button[aria-selected="true"] .nb{color:var(--sem)}
 .panel.alert{border-color:var(--bad);border-left:5px solid var(--bad)}
 .vgroup{border-top:1px solid var(--line);padding-block:10px}
 .vhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.linkbtn{background:none;border:0;padding:0;font:700 16px var(--font-body);color:var(--fg);cursor:pointer;text-transform:capitalize;text-align:left}
+.linkbtn{background:none;border:0;padding:0;font:700 16px var(--font-body);color:var(--fg);cursor:pointer;text-transform:none;text-align:left}.linkbtn::first-letter{text-transform:uppercase}
 .linkbtn:hover{color:var(--sem);text-decoration:underline}
 .vrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:7px 10px;background:var(--surface-2);border-radius:5px;margin-top:5px}
 .vn{display:flex;gap:10px;flex-wrap:wrap;align-items:baseline;min-width:0}
@@ -193,6 +196,21 @@ table.sit tfoot th,table.sit tfoot td{border-top:2px solid var(--fg);font-weight
 table.inf td.n,table.inf th.n{text-align:right}
 table.inf td.wrap{white-space:normal;min-width:180px;max-width:360px}
 table.inf tfoot th,table.inf tfoot td{border-top:2px solid var(--fg);font-weight:700}
+.panel.avis{border-left:5px solid var(--sem);margin-bottom:16px}
+.picker{margin-bottom:6px}
+.pk-grid{display:grid;grid-template-columns:repeat(7,minmax(34px,54px));gap:4px;margin-bottom:10px}
+.pk-h{font-size:12px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase}
+.pk{height:40px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:5px;font:600 14px var(--font-body);cursor:pointer;padding:0}
+.pk:hover:not(:disabled){border-color:var(--sem)}
+.pk:disabled{cursor:default;color:var(--muted);background:var(--surface-2)}
+.pk.pk-as{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}.pk.pk-pe{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}.pk.pk-va{background:var(--vac-bg);color:var(--vac);border-color:var(--vac)}
+.pk[aria-pressed="true"]{background:var(--sem);color:var(--sem-ink);border-color:var(--sem)}
+td input.mid{width:150px}
+table.quad{min-width:900px}
+table.quad th,table.quad td{padding:3px 2px;text-align:center;font:500 11px var(--font-mono);border:1px solid var(--line);min-width:22px;letter-spacing:0}
+table.quad th{font-weight:700;color:var(--fg)}
+table.quad td.q-n,table.quad th:first-child{text-align:left;font:600 13px var(--font-body);white-space:nowrap;padding:3px 8px;text-transform:none}
+.q-A,.q-AC{background:var(--ok-bg);color:var(--ok);font-weight:700}.q-C{background:var(--warn-bg);color:var(--warn);font-weight:700}.q-V{background:var(--vac-bg);color:var(--vac)}.q-p{color:var(--muted)}.q-wk{background:var(--surface-2)}
 details summary{cursor:pointer;color:var(--muted);font-weight:500}
 </style>
 
@@ -269,7 +287,14 @@ const USER_DOMAIN = "auditories.sem";
   const qs=s=>({docs:s.docs.map(ds),size:s.size,empty:s.empty,metadata:s.metadata||{fromCache:false,hasPendingWrites:false}});
   const wrapDoc=r=>({id:r.id,path:r.path,get:()=>r.get().then(ds),set:d=>r.set(d),update:d=>r.set(d,{merge:true}),delete:()=>r.delete(),
     onSnapshot:(n,e)=>r.onSnapshot(s=>n(ds(s)),e),collection:p=>wrapCol(r.collection(p))});
-  const wrapCol=c=>({path:c.path,doc:id=>wrapDoc(c.doc(id)),get:()=>c.get().then(qs),onSnapshot:(n,e)=>c.onSnapshot(s=>n(qs(s)),e)});
+  const wrapQ=c=>({get:()=>c.get().then(qs),onSnapshot:(n,e)=>c.onSnapshot(s=>n(qs(s)),e),orderBy:(f,d)=>wrapQ(c.orderBy(f,d||"asc")),limit:n=>wrapQ(c.limit(n)),where:(f,o,v)=>wrapQ(c.where(f,o,v))});
+  const wrapCol=c=>({...wrapQ(c),path:c.path,doc:id=>wrapDoc(c.doc(id))});
+  // Rols per a les regles de seguretat: un document per usuari a la col·lecció "rols"
+  window.SEM_SYNC_ROLS=async(nou,vell)=>{
+    const us=new Set();
+    for(const [pid,x] of Object.entries(nou||{}))if(x.usuario){us.add(x.usuario);await fs.doc("rols/"+toEmail(x.usuario)).set({pid,gestor:!!x.gestor,auditor:!!x.auditor})}
+    for(const x of Object.values(vell||{}))if(x.usuario&&!us.has(x.usuario))await fs.doc("rols/"+toEmail(x.usuario)).delete();
+  };
   const api={
     db:{doc:p=>wrapDoc(fs.doc(p)),collection:p=>wrapCol(fs.collection(p))},
     user:{id:async()=>auth.currentUser.uid,isOwner:async()=>ADMINS.includes(userName()),canEdit:async()=>ADMINS.includes(userName()),can:async()=>true,profiles:async()=>({})},
@@ -314,18 +339,6 @@ const USER_DOMAIN = "auditories.sem";
     if(b.dataset.a==="logout")auth.signOut();
     if(b.dataset.a==="chpass")passForm();
   });
-  // Importació de dades inicials (només administradors)
-  document.addEventListener("change",async ev=>{
-    const t=ev.target;if(t.id!=="imp-file"||!t.files[0])return;
-    try{
-      const d=JSON.parse(await t.files[0].text());let n=0;
-      for(const [k,v] of Object.entries(d.config||{})){await fs.doc(`config/${k}`).set(v);n++}
-      for(const [p,v] of Object.entries(d.vacaciones||{})){await fs.doc(`vacaciones/${p}`).set(v);n++}
-      for(const [p,dies] of Object.entries(d.disp||{}))for(const [f,v] of Object.entries(dies)){await fs.doc(`disp/${p}/dias/${f}`).set(v);n++}
-      toast(`Dades importades: ${n} registres`);
-    }catch(e){toast("No s'han pogut importar les dades. Comprova el fitxer.")}
-    t.value="";
-  });
 })();
 </script>
 <script>
@@ -334,7 +347,7 @@ const FRANJAS = {
   noche:{l:"Nit",i:"22:00",f:"08:00"}, jornada:{l:"Jornada 12 h",i:"08:00",f:"20:00"},
   personalizada:{l:"Personalitzada",i:"",f:""}
 };
-const RECURSOS = ["SVB","SVA (metge)","SVAI (infermeria)","VIR","Helicòpter","CECOS / Sala de coordinació","Base / Unitat assistencial"];
+const RECURSOS = ["SVAm","SVAi","VIR","ECO","UIS","Altres"];
 const TERRITORIOS = ["Alt Pirineu i Aran","Lleida","Camp de Tarragona","Terres de l'Ebre","Girona","Catalunya Central","Barcelona","Metropolitana Nord","Metropolitana Sud","Penedès","CECOS"];
 const MESES = ["gener","febrer","març","abril","maig","juny","juliol","agost","setembre","octubre","novembre","desembre"];
 const DOW = ["Dl","Dt","Dc","Dj","Dv","Ds","Dg"];
@@ -344,7 +357,7 @@ const S = {
   equipo:{}, eqLoaded:false,
   cfg:{minPorDia:2, minDias:{}, objetivoDefecto:2, objetivosMes:{}},
   dias:new Map(), vac:new Map(), subs:new Map(), names:new Map(),
-  tab:"calendario", mode:"mes", cursor:new Date(), filtro:"todos", vacPid:null, inf:null, dl:null, vista:"gestor", verComo:null, sitPid:null, sitYear:new Date().getFullYear(),
+  tab:"calendario", mode:"mes", cursor:new Date(), filtro:"todos", vacPid:null, inf:null, dl:null, vista:"gestor", verComo:null, username:null, proposta:null, selMes:null, selDias:new Set(), editSol:null, log:[], logSub:false, avisOk:false, quadMes:null, sitPid:null, sitYear:new Date().getFullYear(),
   editComp:null, busy:false, loaded:false, stale:false, skipLink:false
 };
 let saved={}; try{saved=JSON.parse(localStorage.getItem("sem-ui")||"{}")}catch(e){}
@@ -370,7 +383,7 @@ const slug=n=>n.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[
 const clone=o=>JSON.parse(JSON.stringify(o||{}));
 
 /* ---------- equipo y roles ---------- */
-const realPid=()=>S.uid?Object.keys(S.equipo).find(p=>S.equipo[p].uid===S.uid)||null:null;
+const realPid=()=>{if(window.SEM_AUTH)return S.username?Object.keys(S.equipo).find(p=>S.equipo[p].usuario===S.username)||null:null;return S.uid?Object.keys(S.equipo).find(p=>S.equipo[p].uid===S.uid)||null:null};
 const realGestor=()=>{const p=realPid();return (p&&!!S.equipo[p].gestor)||S.owner};
 const realAuditor=()=>{const p=realPid();return !!(p&&S.equipo[p].auditor)};
 const simulando=()=>realGestor()&&S.vista==="auditor"&&!!S.verComo&&!!S.equipo[S.verComo]?.auditor;
@@ -399,9 +412,10 @@ const asignados=(list)=>list.filter(e=>e.estado==="asignado").length;
 function asignadosMes(p,mes){let n=0;const m=S.dias.get(p);if(m)for(const[f,d]of m)if(d.estado==="asignado"&&f.startsWith(mes))n++;return n}
 function vacDiasMes(p,mes){const[y,m]=mes.split("-").map(Number),days=new Date(y,m,0).getDate();let n=0;for(let d=1;d<=days;d++)if(enVac(p,`${mes}-${pad(d)}`))n++;return n}
 const pendientes=()=>entradas().filter(e=>e.estado==="pendiente").sort((a,b)=>a.fecha.localeCompare(b.fecha)||porNombre(a.pid,b.pid));
-const compOk=c=>!!(c&&c.recurso&&c.territorio);
+const compOk=c=>!!(c&&c.recurso&&c.indicativo&&c.territorio);
+const unitat=c=>c?[c.recurso,c.indicativo].filter(Boolean).join(" "):"";
 const hor=e=>e.inicio?`${e.inicio}–${e.fin}`:"Horari no indicat";
-function compTxt(c){if(!c)return "";const d=c.fecha?`Lliura el ${fCorta(c.fecha)}`:"Lliura";const r=compOk(c)?` a ${esc(c.recurso)} · ${esc(c.territorio)}`:" · unitat i territori per informar";const h=c.inicio?` · <span class="mono">${esc(c.inicio)}–${esc(c.fin)}</span>`:"";return esc(d)+r+h}
+function compTxt(c){if(!c)return "";const d=c.fecha?`Lliura el ${fCorta(c.fecha)}`:"Lliura";const r=compOk(c)?` a ${esc(unitat(c))} · ${esc(c.territorio)}`:(c.recurso||c.indicativo||c.territorio?` · ${esc([unitat(c),c.territorio].filter(Boolean).join(" · "))} · falta ${!c.recurso?"el tipus d'unitat":!c.indicativo?"l'indicatiu":"el territori"}`:" · unitat i territori per informar");const h=c.inicio?` · <span class="mono">${esc(c.inicio)}–${esc(c.fin)}</span>`:"";return esc(d)+r+h}
 const sinComp=p=>entradas().filter(e=>e.estado==="asignado"&&!compOk(e.comp)&&(!p||e.pid===p)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
 const visibles=list=>soloPropio()?list.filter(e=>e.pid===mePid()):S.filtro==="todos"?list:list.filter(e=>e.pid===S.filtro);
 const deVacaciones=k=>(soloPropio()?[mePid()].filter(Boolean):auditores()).filter(p=>enVac(p,k));
@@ -417,12 +431,12 @@ function renderHeader(){
   if(simulando())roles.push("Vista auditor/a");else{if(isGestor())roles.push("Gestor/a");if(isAuditor())roles.push("Auditor/a")}
   $("who").innerHTML=`<span>${esc(p?nombre(p):S.demo?"":"Sense identificar")}</span>${roles.map(r=>`<span class="role">${r}</span>`).join("")}${window.SEM_AUTH&&S.uid?`<button class="btn sm" data-a="chpass">Contrasenya</button><button class="btn sm" data-a="logout">Surt (${esc(window.SEM_USER())})</button>`:""}`;
   const g=isGestor(),a=isAuditor(),tabs=[["calendario","Calendari",0]];
-  if(g) tabs.push(["validar","Pendents de validar",pendientes().filter(e=>e.fecha>=todayIso).length]);
+  if(g) tabs.push(["validar","Pendents de validar",pendientes().filter(e=>e.fecha>=todayIso).length+solicituds().length]);
   if(a) tabs.push(["mis","La meva disponibilitat",sinComp(p).length]);
   if(a||g) tabs.push(["situacion",g?"Situació per auditor":"La meva situació",0]);
   if(a||g) tabs.push(["vacaciones","Vacances",0]);
   if(g) tabs.push(["informe","Informe",0]);
-  if(g){tabs.push(["objetivos","Objectius i regles",0]);tabs.push(["equipo","Equip i rols",0])}
+  if(g){tabs.push(["objetivos","Objectius i regles",0]);tabs.push(["equipo","Equip i rols",0]);tabs.push(["historial","Historial",0])}
   if(realGestor()) tabs.push(["perfil","El meu perfil",0]);
   if(!tabs.some(t=>t[0]===S.tab)) S.tab="calendario";
   $("tabs").innerHTML=tabs.map(([k,l,n])=>`<button role="tab" data-a="tab" data-v="${k}" aria-selected="${S.tab===k}">${l}${badge(n)}</button>`).join("");
@@ -437,13 +451,14 @@ function render(){
   renderHeader();
   const m=$("main");
   if(needsLink()){m.innerHTML=vVincular();return}
-  const v={calendario:vCalendario,validar:vValidar,mis:vMis,vacaciones:vVacaciones,situacion:vSituacion,perfil:vPerfil,informe:vInforme,objetivos:vObjetivos,equipo:vEquipo}[S.tab]||vCalendario;
+  const v={calendario:vCalendario,validar:vValidar,mis:vMis,vacaciones:vVacaciones,situacion:vSituacion,perfil:vPerfil,informe:vInforme,objetivos:vObjetivos,equipo:vEquipo,historial:vHistorial}[S.tab]||vCalendario;
   m.innerHTML=v();
 }
-const needsLink=()=>!S.demo&&S.uid&&S.eqLoaded&&!realPid()&&!S.skipLink;
+const needsLink=()=>!S.demo&&S.uid&&S.eqLoaded&&!realPid()&&!S.skipLink&&!(window.SEM_AUTH&&S.owner);
 
 /* ---------- identificación ---------- */
 function vVincular(){
+  if(window.SEM_AUTH)return `<section class="panel narrow"><h2>El teu usuari encara no està assignat</h2><p class="lead">L'usuari «${esc(S.username||"")}» no està assignat a cap persona de l'equip. Demana a un gestor/a que escrigui el teu usuari al costat del teu nom a «Equip i rols».</p></section>`;
   const libres=Object.keys(S.equipo).filter(p=>!S.equipo[p].uid).sort(porNombre);
   return `<section class="panel narrow"><h2>Qui ets?</h2>
   <p class="lead">Selecciona el teu nom de l'equip per vincular-lo al teu compte. Només ho hauràs de fer una vegada.</p>
@@ -472,14 +487,15 @@ function vCalendario(){
     <span class="period">${esc(periodo())}</span>${isAuditor()&&S.mode!=="dia"?`<span class="hint" style="margin:0">Prem un dia per afegir la teva disponibilitat</span>`:""}${soloPropio()?"":`<span class="push">${filtroSelect()}</span>`}</div>`;
   const pf=porFecha();
   const body=S.mode==="mes"?vMes(pf):S.mode==="semana"?vSemana(pf):S.mode==="dia"?vDia(pf,iso(S.cursor)):vAno(pf);
-  const legend=soloPropio()?`<div class="legend"><span><i style="background:var(--ok)"></i>Assignat</span><span><i class="dash"></i>Pendent de confirmar</span><span><i style="background:var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Calen més auditors del que és habitual</span></div>`:`<div class="legend"><span><i style="background:var(--ok)"></i>Cobert</span><span><i style="background:var(--warn)"></i>Cobertura parcial</span><span><i style="background:var(--bad)"></i>Sense assignar</span><span><i class="dash"></i>Disponible, pendent de validar</span><span><i style="background:var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Dia amb mínim especial</span></div>`;
-  return `<div class="grid2"><section class="panel" aria-label="Calendari">${tb}${body}${S.mode!=="dia"?legend:""}</section><aside class="stack">${vContador()}${vHuecos(pf)}</aside></div>`;
+  const legend=soloPropio()?`<div class="legend"><span><i style="background:var(--ok)"></i>Assignat, compensació informada</span><span><i style="background:var(--warn)"></i>Assignat, compensació per informar</span><span><i class="dash"></i>Pendent de confirmar</span><span><i style="background:var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Calen més auditors del que és habitual</span></div>`:`<div class="legend"><span><i style="border:2px solid var(--ok)"></i>Dia cobert</span><span><i style="border:2px solid var(--warn)"></i>Cobertura parcial</span><span><i style="border:2px solid var(--bad)"></i>Sense assignar</span><span><i style="background:var(--ok-bg);border:1px solid var(--ok)"></i>Nom en verd: assignat, compensació informada</span><span><i style="background:var(--warn-bg);border:1px solid var(--warn)"></i>Nom en taronja: assignat, compensació per informar</span><span><i class="dash"></i>Nom amb ?: pendent de validar</span><span><i style="background:var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Dia amb mínim especial</span></div>`;
+  return `${vNovetats()}<div class="grid2"><section class="panel" aria-label="Calendari">${tb}${body}${S.mode!=="dia"?legend:""}</section><aside class="stack">${vContador()}${vHuecos(pf)}</aside></div>`;
 }
 function cellChips(list,k){
   const v=visibles(list),a=v.filter(e=>e.estado==="asignado"),p=v.filter(e=>e.estado==="pendiente");
   const fe=filtroEf(),vac=fe==="todos"?deVacaciones(k).length:(enVac(fe,k)?1:0);
-  if(soloPropio()) return `<div class="chips">${a.map(e=>`<span class="chip">Assignat</span>`).join("")}${p.map(e=>`<span class="chip pend">Pendent</span>`).join("")}${vac?`<span class="chip vac">Vacances</span>`:""}</div>`;
-  return `<div class="chips">${a.map(e=>`<span class="chip" title="${esc(nombre(e.pid))} ${esc(hor(e))}">${esc(corto(e.pid))}</span>`).join("")}${p.length?`<span class="chip pend">${p.length} disp.</span>`:""}${vac?`<span class="chip vac">${fe==="todos"?vac+" vac.":"Vacances"}</span>`:""}</div>`;
+  const cl=e=>compOk(e.comp)?"c-ok":"c-warn",tip=e=>compOk(e.comp)?"Assignat · compensació informada":"Assignat · compensació per informar";
+  if(soloPropio()) return `<div class="chips">${a.map(e=>`<span class="chip ${cl(e)}" title="${tip(e)}">Assignat</span>`).join("")}${p.map(e=>`<span class="chip pend">Pendent</span>`).join("")}${vac?`<span class="chip vac">Vacances</span>`:""}</div>`;
+  return `<div class="chips">${a.map(e=>`<span class="chip ${cl(e)}" title="${esc(nombre(e.pid))} ${esc(hor(e))} · ${tip(e)}">${esc(corto(e.pid))}</span>`).join("")}${p.map(e=>`<span class="chip pend" title="${esc(nombre(e.pid))} · pendent de validar">${esc(corto(e.pid))}</span>`).join("")}${vac?`<span class="chip vac">${fe==="todos"?vac+" vac.":"Vacances"}</span>`:""}</div>`;
 }
 const special=k=>Number.isFinite(S.cfg.minDias?.[k]);
 function vMes(pf){
@@ -488,8 +504,8 @@ function vMes(pf){
   for(let i=0;i<42;i++){
     const d=addDays(start,i),k=iso(d),list=pf.get(k)||[];
     if(i>=35&&d.getMonth()!==c.getMonth())break;
-    const n=asignados(list),cc=covClass(n,k),inM=d.getMonth()===c.getMonth(),sp=soloPropio(),gap=!sp&&inM&&k>=todayIso&&cc!=="ok";
-    h+=`<button class="cell ${inM?"":"out"} ${k===todayIso?"today":""} ${gap?"gap":""}" data-a="ir" data-v="${k}" aria-label="${esc(fLarga(k))}${sp?"":`: ${n} de ${minFor(k)} assignats`}">
+    const n=asignados(list),cc=covClass(n,k),inM=d.getMonth()===c.getMonth(),sp=soloPropio(),mine=sp?list.filter(e=>e.pid===mePid()):[],cv=!inM?"":sp?(mine.some(e=>e.estado==="asignado")?(mine.some(e=>e.estado==="asignado"&&!compOk(e.comp))?"cv-part":"cv-ok"):""):"cv-"+cc;
+    h+=`<button class="cell ${inM?"":"out"} ${k===todayIso?"today":""} ${cv}" data-a="ir" data-v="${k}" aria-label="${esc(fLarga(k))}${sp?"":`: ${n} de ${minFor(k)} assignats`}">
       <span class="row"><span class="dnum">${d.getDate()}${special(k)?"<b class='star'>★</b>":""}</span>${sp?"":`<span class="cov ${cc}">${n}/${minFor(k)}</span>`}</span>${cellChips(list,k)}</button>`;
   }
   return `<div class="scroll"><div class="month">${h}</div></div>`;
@@ -500,7 +516,7 @@ function vSemana(pf){
     const d=addDays(a,i),k=iso(d),list=visibles(pf.get(k)||[]).filter(e=>e.estado!=="descartado"),n=asignados(pf.get(k)||[]);
     const fe=filtroEf(),vac=(fe==="todos"?deVacaciones(k):enVac(fe,k)?[fe]:[]);
     h+=`<div class="wcol"><header data-a="ir" data-v="${k}"><span class="dnum">${DOW[i]} ${d.getDate()}${special(k)?"<b class='star'>★</b>":""}</span>${soloPropio()?"":`<span class="cov ${covClass(n,k)}">${n}/${minFor(k)}</span>`}</header>
-      ${list.map(e=>`<div class="slot ${e.estado==="asignado"?"":"pend"}"><div class="n">${esc(nombre(e.pid))}</div><div class="mono">${esc(hor(e))}</div>${e.estado==="asignado"?(compOk(e.comp)?`<div>${compTxt(e.comp)}</div>`:`<div class="badtxt">${e.comp?compTxt(e.comp):"Falta la compensació"}</div>`):"<div>Pendent de validar</div>"}</div>`).join("")}
+      ${list.map(e=>`<div class="slot ${e.estado==="asignado"?(compOk(e.comp)?"s-ok":"s-warn"):"pend"}"><div class="n">${esc(nombre(e.pid))}</div><div class="mono">${esc(hor(e))}</div>${e.estado==="asignado"?(compOk(e.comp)?`<div>${compTxt(e.comp)}</div>`:`<div class="badtxt">${e.comp?compTxt(e.comp):"Falta la compensació"}</div>`):"<div>Pendent de validar</div>"}</div>`).join("")}
       ${vac.map(p=>`<div class="slot vacs"><div class="n">${esc(nombre(p))}</div><div>Vacances</div></div>`).join("")}
       ${!list.length&&!vac.length?`<div class="empty">${soloPropio()?"Sense dies":"Sense professionals"}</div>`:""}</div>`;
   }
@@ -530,7 +546,7 @@ function vDia(pf,k){
   h+=`<div class="list">${list.map(e=>itemHTML(e,true)).join("")}</div>`;
   h+=diaDispForm(k);
   const libran=visibles(entradas().filter(e=>e.estado==="asignado"&&e.comp&&e.comp.fecha===k));
-  if(libran.length) h+=`<h3 class="mt">Lliuren per compensació</h3><div class="list">${libran.map(e=>`<div class="item"><div><div class="t">${esc(nombre(e.pid))}</div><div class="s">Per l'auditoria del ${esc(fCorta(e.fecha))}${compOk(e.comp)?` · ${esc(e.comp.recurso)} · ${esc(e.comp.territorio)}`:" · unitat i territori per informar"}</div></div></div>`).join("")}</div>`;
+  if(libran.length) h+=`<h3 class="mt">Lliuren per compensació</h3><div class="list">${libran.map(e=>`<div class="item"><div><div class="t">${esc(nombre(e.pid))}</div><div class="s">Per l'auditoria del ${esc(fCorta(e.fecha))}${compOk(e.comp)?` · ${esc(unitat(e.comp))} · ${esc(e.comp.territorio)}`:" · unitat i territori per informar"}</div></div></div>`).join("")}</div>`;
   const vac=deVacaciones(k).filter(p=>filtroEf()==="todos"||p===filtroEf());
   if(vac.length) h+=`<h3 class="mt">De vacances</h3><div class="chips">${vac.map(p=>`<span class="chip vac">${esc(nombre(p))}</span>`).join("")}</div>`;
   return h;
@@ -560,23 +576,27 @@ function itemHTML(e,showName){
   }
   if((mine||g)&&e.estado==="asignado") acts+=`<button class="btn sm ${compOk(e.comp)?"":"primary"}" data-a="editcomp" data-v="${esc(key)}">${compOk(e.comp)?"Edita la compensació":"Informa la compensació"}</button>`;
   if(mine&&e.estado==="pendiente") acts+=`<button class="btn sm danger" data-a="borrar" ${d}>Retira</button>`;
+  const sol=e.solicitud,solP=sol?.estado==="pendent";
+  if(mine&&e.estado==="asignado"&&e.fecha>=todayIso&&!solP) acts+=`<button class="btn sm" data-a="editsol" data-v="${esc(key)}">Sol·licita un canvi</button>`;
+  if(g&&solP) acts+=`<button class="btn sm primary" data-a="solok" ${d}>Accepta i treu el dia</button><button class="btn sm" data-a="solno" ${d}>Rebutja</button>`;
+  const solH=sol?`<div class="comp ${solP?"missing":""}"><b>Sol·licitud de canvi (${esc(sol.estado)}):</b> ${esc(sol.motivo||"")}</div>`:"";
   let comp="";
   if(e.estado==="asignado") comp=compOk(e.comp)?`<div class="comp"><b>Compensació:</b> ${compTxt(e.comp)}</div>`:`<div class="comp missing">${e.comp?"<b>Compensació incompleta:</b> "+compTxt(e.comp):"Compensació pendent d'informar"}</div>`;
   const label={pendiente:"pendent",asignado:"assignat",descartado:"descartat"}[e.estado]||e.estado;
   return `<div class="item"><div><div class="t">${showName?esc(nombre(e.pid)):esc(fLarga(e.fecha))}</div>
     <div class="s"><span class="mono">${esc(hor(e))}</span>${FRANJAS[e.franja]?" · "+esc(FRANJAS[e.franja].l):""}${e.nota?" · "+esc(e.nota):""}</div></div>
-    <div class="acts">${vac?`<span class="pill vacp">vacances</span>`:""}<span class="pill ${e.estado}">${label}</span>${acts}</div>${comp}${S.editComp===key?compForm(e):""}</div>`;
+    <div class="acts">${vac?`<span class="pill vacp">vacances</span>`:""}<span class="pill ${e.estado}">${label}</span>${acts}</div>${comp}${S.editComp===key?compForm(e):""}${solH}${S.editSol===key?solForm(e):""}</div>`;
 }
 function compForm(e){
   const c=e.comp||{};
   return `<form class="compform form" data-form="comp" data-p="${esc(e.pid)}" data-f="${e.fecha}">
     <label class="f">Dia que lliures<input id="c-fecha" name="fecha" type="date" required value="${esc(c.fecha||e.fecha)}"></label>
-    <label class="f">Unitat on lliures<input id="c-rec" name="recurso" list="dl-rec" required value="${esc(c.recurso||"")}" placeholder="p. ex. SVA (metge)"></label>
+    <label class="f">Tipus d'unitat<select id="c-rec" name="recurso" required><option value="">Selecciona…</option>${[...new Set([...RECURSOS,...(c.recurso?[c.recurso]:[])])].map(r=>`<option value="${esc(r)}" ${c.recurso===r?"selected":""}>${esc(r)}</option>`).join("")}</select></label>
+    <label class="f">Indicatiu de la unitat<input id="c-ind" name="indicativo" required maxlength="10" style="text-transform:uppercase" value="${esc(c.indicativo||"")}" placeholder="p. ex. N301, B202"></label>
     <label class="f">Territori<input id="c-ter" name="territorio" list="dl-ter" required value="${esc(c.territorio||"")}"></label>
     <label class="f">Des de<input id="c-ini" name="inicio" type="time" required value="${esc(c.inicio||e.inicio||"")}"></label>
     <label class="f">Fins a<input id="c-fin" name="fin" type="time" required value="${esc(c.fin||e.fin||"")}"></label>
     <div class="acts"><button type="button" class="btn sm" data-a="cancelcomp">Cancel·la</button><button class="btn sm primary">Desa la compensació</button></div>
-    <datalist id="dl-rec">${RECURSOS.map(r=>`<option value="${esc(r)}">`).join("")}</datalist>
     <datalist id="dl-ter">${TERRITORIOS.map(r=>`<option value="${esc(r)}">`).join("")}</datalist></form>`;
 }
 function barra(a,o){return `<div class="bar"><i style="width:${Math.min(100,o?a/o*100:(a?100:0))}%" class="${a>o?"over":""}"></i></div>`}
@@ -608,7 +628,7 @@ function vHuecos(pf){
 /* ---------- validar (gestor) ---------- */
 function vValidar(){
   const pf=porFecha(),pend=pendientes(),fut=pend.filter(e=>e.fecha>=todayIso),pas=pend.filter(e=>e.fecha<todayIso);
-  const huecos=huecosMes(pf,new Date()),sc=sinComp();
+  const huecos=huecosMes(pf,new Date()),sc=sinComp(),sol=solicituds();
   const groups=new Map();for(const e of fut){if(!groups.has(e.fecha))groups.set(e.fecha,[]);groups.get(e.fecha).push(e)}
   const mesOf=k=>k.slice(0,7);
   const rowFor=e=>{const m=mesOf(e.fecha),a=asignadosMes(e.pid,m),o=objetivo(e.pid,m),vac=enVac(e.pid,e.fecha),d=`data-p="${esc(e.pid)}" data-f="${e.fecha}"`;
@@ -623,8 +643,11 @@ function vValidar(){
       <div class="stat ${fut.length?"warn":""}"><span>Disponibilitats per validar</span><b>${fut.length}</b></div>
       <div class="stat ${huecos.length?"bad":""}"><span>Dies sense cobertura aquest mes</span><b>${huecos.length}</b></div>
       <div class="stat ${sc.length?"bad":""}"><span>Compensacions sense informar</span><b>${sc.length}</b></div>
+      <div class="stat ${sol.length?"warn":""}"><span>Sol·licituds de canvi</span><b>${sol.length}</b></div>
     </div>
-    <section class="panel"><h2>Pendents de validar</h2><p class="lead">Ordenades per data. Al costat de cada auditor veus els dies assignats aquell mes respecte al seu objectiu.</p>
+    ${vProposta()}
+    ${sol.length?`<section class="panel alert"><h2>Sol·licituds de canvi</h2><p class="lead">Auditors que demanen que se'ls retiri un dia ja assignat. Si l'acceptes, el dia queda sense aquest auditor.</p>${sol.map(e=>`<div class="vgroup"><div class="vhead"><button class="linkbtn" data-a="ir" data-v="${e.fecha}">${esc(fLarga(e.fecha))}</button></div><div class="list">${itemHTML(e,true)}</div></div>`).join("")}</section>`:""}
+    <section class="panel"><div class="toolbar" style="margin-bottom:4px"><h2>Pendents de validar</h2>${fut.length&&!S.proposta&&!S.demo?`<button class="btn sm primary push" data-a="proposa">Proposa una assignació</button>`:""}</div><p class="lead">Ordenades per data. Al costat de cada auditor veus els dies assignats aquell mes respecte al seu objectiu.</p>
     ${fut.length?list:`<p class="empty">No tens disponibilitats pendents de validar.</p>`}
     ${pas.length?`<details class="mt"><summary>${pas.length} disponibilitat(s) de dates ja passades sense validar</summary>${pas.map(e=>`<div class="vgroup"><div class="vhead"><span>${esc(fCorta(e.fecha))}</span></div>${rowFor(e)}</div>`).join("")}</details>`:""}</section>
     ${sc.length?`<section class="panel"><h3>Compensacions sense informar per auditor</h3><div class="ctr">${auditores().map(p=>[p,sinComp(p).length]).filter(x=>x[1]).map(([p,n])=>`<div class="r"><span>${esc(nombre(p))}</span><span class="mono badtxt">${n}</span></div>`).join("")}</div></section>`:""}
@@ -645,15 +668,15 @@ function vMis(){
       <div class="stat"><span>Dies assignats · ${esc(fMes(new Date()))}</span><b>${a}<small> / ${o}</small></b></div>
       <div class="stat ${pp?"warn":""}"><span>Pendents de validar pel gestor</span><b>${pp}</b></div>
     </div>
-    ${sc.length?`<section class="panel alert"><h2>Compensacions pendents d'informar</h2><p class="lead">Dies que ja tens assignats. Indica en quina unitat lliures, el territori i l'horari.</p><div class="list">${sc.map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
-    <section class="panel"><h2>Afegeix disponibilitat</h2><p class="lead">Indica el dia i la franja horària. El gestor/a validarà quins dies se t'assignen.</p>
-    <form class="form" data-form="disp">
-      <label class="f">Dia disponible<input id="d-fecha" name="fecha" type="date" required min="${todayIso}"></label>
+    ${sc.length?`<section class="panel alert"><h2>Compensacions pendents d'informar</h2><p class="lead">Dies que ja tens assignats. Indica el tipus d'unitat, el seu indicatiu (per exemple N301), el territori i l'horari.</p><div class="list">${sc.map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
+    <section class="panel"><h2>Afegeix disponibilitat</h2><p class="lead">Marca al calendari tots els dies en què estàs disponible, tria la franja horària i envia'ls d'un sol cop. El gestor/a validarà quins dies se t'assignen.</p>
+    ${pickerDies()}
+    <form class="form mt" data-form="dispmulti">
       <label class="f">Franja<select id="d-franja" name="franja">${Object.entries(FRANJAS).map(([k,v])=>`<option value="${k}">${v.l}${v.i?` (${v.i}–${v.f})`:""}</option>`).join("")}</select></label>
       <label class="f">Des de<input id="d-ini" name="inicio" type="time" required value="${def.i}"></label>
       <label class="f">Fins a<input id="d-fin" name="fin" type="time" required value="${def.f}"></label>
       <label class="f span">Nota (opcional)<input id="d-nota" name="nota" maxlength="140" placeholder="p. ex. disponible només a la zona de Barcelona"></label>
-      <div><button class="btn primary" ${S.demo||!S.canWrite?"disabled":""}>Envia la disponibilitat</button></div>
+      <div><button class="btn primary" id="multi-btn" ${S.demo||!S.canWrite?"disabled":""}>Envia la disponibilitat (${S.selDias.size})</button></div>
     </form></section>
     <section class="panel"><h3>Els meus propers dies</h3>${fut.length?`<div class="list">${fut.map(e=>itemHTML(e,false)).join("")}</div>`:`<p class="empty">No has enviat disponibilitat per a dates futures.</p>`}</section>
     ${pas.length?`<section class="panel"><h3>Historial</h3><div class="list">${pas.slice(0,20).map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
@@ -745,7 +768,8 @@ function vPerfil(){
     ["Vacances","Les de qualsevol auditor/a i les de l'equip","Només les seves"],
     ["Informe","Informes per dates en Excel i PDF","Sense accés"],
     ["Objectius i regles","Objectius per mes, mínims i dies especials","Sense accés"],
-    ["Equip i rols","Altes, baixes i canvi de rol","Sense accés"]];
+    ["Equip i rols","Altes, baixes, canvi de rol i còpia de seguretat","Sense accés"],
+    ["Historial","Registre de tots els canvis","Sense accés"]];
   return `<div class="grid2"><div class="stack"><section class="panel"><h2>El meu perfil</h2>
     <p class="lead">${esc(rp?nombre(rp):"Propietari/ària")} · ${realAuditor()?"gestor/a i auditor/a":"gestor/a"}. Canvia de vista per comprovar què veu i què pot fer cada perfil.</p>
     <div class="seg" role="group" aria-label="Vista"><button data-a="vista" data-v="gestor" aria-pressed="${!sim}">Mostra com a gestor/a</button><button data-a="vista" data-v="auditor" aria-pressed="${sim}" ${aud.length?"":"disabled"}>Mostra com a auditor/a</button></div>
@@ -767,9 +791,9 @@ function datosInforme(){
   const all=grups.flatMap(g=>g.rows);
   return {grups,total:all.length,inf:all.filter(e=>compOk(e.comp)).length,pend:all.filter(e=>!compOk(e.comp)).length};
 }
-const compEstado=e=>compOk(e.comp)?"Informada":e.comp?.fecha?"Falta unitat/territori":"Sense informar";
+const compEstado=e=>compOk(e.comp)?"Informada":e.comp?.fecha?"Falta unitat, indicatiu o territori":"Sense informar";
 const hora=(a,b)=>a?`${a}-${b}`:"";
-const filaAud=e=>[fDMY(e.fecha),hora(e.inicio,e.fin),fDMY(e.comp?.fecha),e.comp?.recurso||"",e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)];
+const filaAud=e=>[fDMY(e.fecha),hora(e.inicio,e.fin),fDMY(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)];
 const CAPS_DET=["Dia d'auditoria","Horari","Dia que compensa","Unitat on compensa","Territori","Horari de compensació","Estat"];
 function vInforme(){
   if(!S.inf) S.inf=infDefaults();
@@ -794,8 +818,8 @@ function vInforme(){
     </div>
     ${D.grups.length?D.grups.map(g=>`<section class="panel"><div class="toolbar" style="margin-bottom:8px"><h2>${esc(nombre(g.pid))}</h2><span class="push mono">${g.rows.length} dia(es) d'auditoria${g.rows.filter(e=>!compOk(e.comp)).length?` · <span class="badtxt">${g.rows.filter(e=>!compOk(e.comp)).length} per informar</span>`:""}</span></div>
       ${g.rows.length?`<div class="scroll"><table class="inf"><thead><tr>${CAPS_DET.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>
-      ${g.rows.map(e=>`<tr><td class="mono"><b>${fDMY(e.fecha)}</b> <span class="muted">${esc(parse(e.fecha).toLocaleDateString("ca-ES",{weekday:"short"}))}</span></td><td class="mono">${esc(hora(e.inicio,e.fin))}</td><td class="mono">${fDMY(e.comp?.fecha)}</td><td>${esc(e.comp?.recurso||"")}</td><td>${esc(e.comp?.territorio||"")}</td><td class="mono">${esc(hora(e.comp?.inicio,e.comp?.fin))}</td><td class="${compOk(e.comp)?"oktxt":"badtxt"}">${compEstado(e)}</td></tr>`).join("")}
-      </tbody></table></div>`:`<p class="empty">Sense dies d'auditoria en aquest període.</p>`}</section>`).join(""):`<section class="panel"><p class="empty">No hi ha dies d'auditoria en aquestes dates.</p></section>`}`}</div>`;
+      ${g.rows.map(e=>`<tr><td class="mono"><b>${fDMY(e.fecha)}</b> <span class="muted">${esc(parse(e.fecha).toLocaleDateString("ca-ES",{weekday:"short"}))}</span></td><td class="mono">${esc(hora(e.inicio,e.fin))}</td><td class="mono">${fDMY(e.comp?.fecha)}</td><td>${esc(unitat(e.comp))}</td><td>${esc(e.comp?.territorio||"")}</td><td class="mono">${esc(hora(e.comp?.inicio,e.comp?.fin))}</td><td class="${compOk(e.comp)?"oktxt":"badtxt"}">${compEstado(e)}</td></tr>`).join("")}
+      </tbody></table></div>`:`<p class="empty">Sense dies d'auditoria en aquest període.</p>`}</section>`).join(""):`<section class="panel"><p class="empty">No hi ha dies d'auditoria en aquestes dates.</p></section>`}`}${vQuadrant()}</div>`;
 }
 function textInforme(){
   const D=datosInforme(),M=metaInforme(),out=[`Dies d'auditoria i compensacions · ${M.per}`,""];
@@ -829,16 +853,18 @@ function logoPNG(){
 }
 async function guardarArchivo(filename,data){
   if(!S.dl){toast("La descàrrega de fitxers no està disponible en aquesta vista");return}
-  try{await S.dl.save({filename,data});toast("Informe descarregat")}
-  catch(e){toast(e?.code==="declined"?"Descàrrega cancel·lada":e?.code==="extension_not_enabled"?"Aquest format no està disponible aquí":"No s'ha pogut descarregar l'informe")}
+  try{await S.dl.save({filename,data});toast("Fitxer descarregat")}
+  catch(e){toast(e?.code==="declined"?"Descàrrega cancel·lada":e?.code==="extension_not_enabled"?"Aquest format no està disponible aquí":"No s'ha pogut descarregar el fitxer")}
 }
 async function exportar(tipo){
-  if(!S.inf||S.inf.hasta<S.inf.desde){toast("Revisa les dates de l'informe");return}
-  if(S.exportando)return;S.exportando=true;toast(tipo==="pdf"?"Generant el PDF…":"Generant l'Excel…");
+  const q=tipo[0]==="q",xl=tipo.endsWith("xlsx");
+  if(!q&&(!S.inf||S.inf.hasta<S.inf.desde)){toast("Revisa les dates de l'informe");return}
+  if(S.exportando)return;S.exportando=true;toast(xl?"Generant l'Excel…":"Generant el PDF…");
   try{
-    if(tipo==="xlsx"){await cargar("exceljs",()=>!!window.ExcelJS);await guardarArchivo(metaInforme().file+".xlsx",await crearXLSX())}
-    else{await cargar("jspdf",()=>!!window.jspdf?.jsPDF);await cargar("autotable",()=>!!window.jspdf?.jsPDF?.API?.autoTable);await guardarArchivo(metaInforme().file+".pdf",crearPDF())}
-  }catch(e){toast("No s'ha pogut generar l'informe. Comprova la connexió i torna-ho a provar.")}
+    const nom=q?`quadrant-auditories-SEM_${S.quadMes}`:metaInforme().file;
+    if(xl){await cargar("exceljs",()=>!!window.ExcelJS);await guardarArchivo(nom+".xlsx",q?await crearQuadrantXLSX():await crearXLSX())}
+    else{await cargar("jspdf",()=>!!window.jspdf?.jsPDF);await cargar("autotable",()=>!!window.jspdf?.jsPDF?.API?.autoTable);await guardarArchivo(nom+".pdf",q?crearQuadrantPDF():crearPDF())}
+  }catch(e){toast("No s'ha pogut generar el fitxer. Comprova la connexió i torna-ho a provar.")}
   finally{S.exportando=false}
 }
 async function crearXLSX(){
@@ -873,7 +899,7 @@ async function crearXLSX(){
     ws.mergeCells(`A${r}:${last}${r}`);const t=ws.getCell(`A${r}`);t.value=`${nombre(g.pid)} · ${g.rows.length} dia(es) d'auditoria`;t.font={name:"Arial",size:11,bold:true,color:{argb:"FF1D2226"}};t.border={bottom:{style:"thin",color:{argb:RED}}};ws.getRow(r).height=20;r++;
     if(!g.rows.length){ws.getCell(`A${r}`).value="Sense dies d'auditoria en aquest període.";ws.getCell(`A${r}`).font={...F,italic:true};r+=2;continue}
     capcalera(CAPS_DET);
-    g.rows.forEach((e,j)=>fila([dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),e.comp?.recurso||"",e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)],j,{date:[1,0,1],red:(i,v)=>i===6&&v!=="Informada"}));
+    g.rows.forEach((e,j)=>fila([dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)],j,{date:[1,0,1],red:(i,v)=>i===6&&v!=="Informada"}));
     r++;
   }
   ws.headerFooter.oddFooter="&L&8SEM · Planificació d'auditories&R&8Pàgina &P de &N";
@@ -881,7 +907,7 @@ async function crearXLSX(){
   const wd=wb.addWorksheet("Dades",{views:[{state:"frozen",ySplit:1}]});
   wd.columns=[{header:"Auditor/a",width:24},...CAPS_DET.map((h,i)=>({header:h,width:COLS[i].w}))];
   wd.getRow(1).eachCell(x=>{x.font={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};x.fill={type:"pattern",pattern:"solid",fgColor:{argb:DARK}};x.alignment={wrapText:true,vertical:"middle"}});
-  for(const g of D.grups)for(const e of g.rows){const row=wd.addRow([nombre(g.pid),dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),e.comp?.recurso||"",e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)]);row.font=F;row.getCell(2).numFmt="dd/mm/yyyy";row.getCell(4).numFmt="dd/mm/yyyy"}
+  for(const g of D.grups)for(const e of g.rows){const row=wd.addRow([nombre(g.pid),dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)]);row.font=F;row.getCell(2).numFmt="dd/mm/yyyy";row.getCell(4).numFmt="dd/mm/yyyy"}
   wd.autoFilter={from:"A1",to:"H1"};
   return await wb.xlsx.writeBuffer();
 }
@@ -929,6 +955,209 @@ function crearPDF(){
   return doc.output("arraybuffer");
 }
 
+/* ---------- historial de canvis ---------- */
+const quiSoc=()=>{const p=realPid();return p?nombre(p):(S.username||"Propietari/ària")};
+function logA(accio,det){
+  if(S.demo||!S.db)return;
+  try{const r=S.db.doc("log/"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)).set({t:new Date().toISOString(),qui:quiSoc(),accio,det:det||""});if(r&&r.catch)r.catch(()=>{})}catch(e){}
+}
+function subLog(){
+  if(S.logSub||!S.db)return;S.logSub=true;
+  try{S.db.collection("log").orderBy("t","desc").limit(300).onSnapshot(s=>{S.log=s.docs.map(d=>d.data());if(S.tab==="historial")render()},()=>{})}catch(e){}
+}
+function vHistorial(){
+  subLog();
+  const fmt=t=>{const d=new Date(t);return isNaN(d)?"":`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+  return `<section class="panel"><h2>Historial de canvis</h2><p class="lead">Els darrers 300 canvis: qui ha fet què i quan.</p>
+  ${S.log.length?`<div class="scroll"><table><thead><tr><th>Data i hora</th><th>Qui</th><th>Acció</th><th>Detall</th></tr></thead><tbody>
+  ${S.log.map(l=>`<tr><td class="mono">${fmt(l.t)}</td><td>${esc(l.qui)}</td><td>${esc(l.accio)}</td><td>${esc(l.det)}</td></tr>`).join("")}</tbody></table></div>`
+  :`<p class="empty">Encara no hi ha canvis registrats. Aquí apareixeran les assignacions, les compensacions, les vacances i els canvis de regles i d'equip.</p>`}</section>`;
+}
+
+/* ---------- novetats des de l'última visita ---------- */
+const lvKey=()=>"sem-last-"+(S.username||realPid()||S.uid||"x");
+function novetats(){
+  if(S.avisOk||S.demo||!S.eqLoaded||simulando())return null;
+  let last;try{last=localStorage.getItem(lvKey())}catch(e){return null}
+  if(!last){try{localStorage.setItem(lvKey(),new Date().toISOString())}catch(e){}return null}
+  const me=realPid(),it=[];
+  if(me&&realAuditor())for(const[f,d]of [...(S.dias.get(me)||new Map())].sort()){
+    if(d.revisado>last)it.push({a:"ir",v:f,t:d.estado==="asignado"?`T'han assignat el ${fCorta(f)}`:d.estado==="descartado"?`S'ha descartat la teva disponibilitat del ${fCorta(f)}`:`S'ha retirat l'assignació del ${fCorta(f)}`});
+    if(d.solicitud?.resolta>last)it.push({a:"ir",v:f,t:`La teva sol·licitud de canvi del ${fCorta(f)} ha estat ${d.solicitud.estado}`});
+  }
+  if(realGestor()){
+    const es=entradas().filter(e=>e.pid!==me);
+    const nd=es.filter(e=>e.enviado>last&&e.estado==="pendiente").length,nc=es.filter(e=>e.compInformada>last).length,ns=es.filter(e=>e.solicitud?.fecha>last&&e.solicitud.estado==="pendent").length;
+    if(nd)it.push({a:"tab",v:"validar",t:`${nd} disponibilitat(s) nova(es) per validar`});
+    if(ns)it.push({a:"tab",v:"validar",t:`${ns} sol·licitud(s) de canvi nova(es)`});
+    if(nc)it.push({a:"tab",v:"informe",t:`${nc} compensació(ns) informada(es)`});
+  }
+  return it.length?it:null;
+}
+function vNovetats(){
+  const it=novetats();if(!it)return "";
+  return `<section class="panel avis"><div class="toolbar" style="margin-bottom:8px"><h3 style="margin:0">Novetats des de la teva última visita</h3><button class="btn sm push" data-a="avisok">Entesos</button></div>
+  <div class="list">${it.slice(0,12).map(i=>`<button class="btn row-btn" data-a="${i.a}" data-v="${i.v}"><span>${esc(i.t)}</span><span>Obre</span></button>`).join("")}${it.length>12?`<p class="empty">i ${it.length-12} més</p>`:""}</div></section>`;
+}
+
+/* ---------- proposta automàtica d'assignació ---------- */
+function calculaProposta(){
+  const pf=porFecha(),extra={},out=[];
+  const dates=[...new Set(pendientes().filter(e=>e.fecha>=todayIso).map(e=>e.fecha))].sort();
+  for(const k of dates){
+    const all=pf.get(k)||[],need=minFor(k)-asignados(all);if(need<=0)continue;
+    const mes=k.slice(0,7),ja=p=>asignadosMes(p,mes)+(extra[p+mes]||0);
+    const cand=all.filter(e=>e.estado==="pendiente"&&!enVac(e.pid,k)).map(e=>({pid:e.pid,falta:objetivo(e.pid,mes)-ja(e.pid),tot:ja(e.pid)}))
+      .sort((a,b)=>b.falta-a.falta||a.tot-b.tot||porNombre(a.pid,b.pid));
+    for(const c of cand.slice(0,need)){out.push({pid:c.pid,fecha:k});extra[c.pid+mes]=(extra[c.pid+mes]||0)+1}
+  }
+  return out;
+}
+function vProposta(){
+  const P=S.proposta;if(!P)return "";
+  const g=new Map();for(const x of P){if(!g.has(x.fecha))g.set(x.fecha,[]);g.get(x.fecha).push(x.pid)}
+  const pf=porFecha();let curts=0;
+  for(const k of new Set(pendientes().filter(e=>e.fecha>=todayIso).map(e=>e.fecha)))if(asignados(pf.get(k)||[])+(g.get(k)||[]).length<minFor(k))curts++;
+  return `<section class="panel addday"><div class="toolbar" style="margin-bottom:8px"><h2>Proposta d'assignació</h2><span class="push acts"><button class="btn sm" data-a="propno">Descarta</button><button class="btn sm primary" data-a="propok">Confirma la proposta (${P.length})</button></span></div>
+  <p class="lead">Cobreix el mínim de cada dia i dona prioritat a qui li falten més dies per arribar a l'objectiu del mes. No s'assigna res fins que la confirmes.${curts?` Hi ha ${curts} dia(es) que no arriben al mínim per falta de disponibilitat.`:""}</p>
+  <div class="ctr">${[...g].map(([k,l])=>`<div class="r"><span class="cap">${esc(fLarga(k))}</span><span>${l.map(p=>esc(nombre(p))).join(" · ")}</span></div>`).join("")}</div></section>`;
+}
+
+/* ---------- sol·licitud de canvi ---------- */
+const solicituds=()=>entradas().filter(e=>e.solicitud?.estado==="pendent").sort((a,b)=>a.fecha.localeCompare(b.fecha));
+function solForm(e){
+  return `<form class="compform form" data-form="sol" data-p="${esc(e.pid)}" data-f="${e.fecha}">
+    <label class="f span">Motiu de la sol·licitud<input id="s-motiu" name="motivo" required maxlength="200" placeholder="Explica per què no pots fer aquest dia"></label>
+    <div class="acts"><button type="button" class="btn sm" data-a="cancelsol">Cancel·la</button><button class="btn sm primary">Envia la sol·licitud</button></div></form>`;
+}
+
+/* ---------- selector de diversos dies ---------- */
+function pickerDies(){
+  if(!S.selMes)S.selMes=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+  const c=S.selMes,me=mePid(),mine=S.dias.get(me)||new Map(),lead=(c.getDay()+6)%7,n=new Date(c.getFullYear(),c.getMonth()+1,0).getDate();
+  let h=DOW.map(d=>`<span class="pk-h">${d}</span>`).join("")+"<span></span>".repeat(lead);
+  for(let d=1;d<=n;d++){
+    const k=`${ym(c)}-${pad(d)}`,ex=mine.get(k),vac=enVac(me,k),off=k<todayIso||vac||!!ex;
+    const cls=ex?(ex.estado==="asignado"?"pk-as":ex.estado==="pendiente"?"pk-pe":"pk-de"):vac?"pk-va":"";
+    const tip=ex?(ex.estado==="asignado"?"Ja assignat":ex.estado==="pendiente"?"Ja enviat, pendent de validar":"Descartat"):vac?"Vacances":k<todayIso?"Dia passat":"";
+    h+=`<button type="button" class="pk ${cls}" data-a="seldia" data-v="${k}" aria-pressed="${S.selDias.has(k)}" ${off?"disabled":""} title="${tip}">${d}${special(k)?"<b class='star'>★</b>":""}</button>`;
+  }
+  return `<div class="picker"><div class="toolbar"><span class="seg"><button type="button" data-a="selmes" data-v="-1" aria-label="Mes anterior">‹</button><button type="button" disabled class="cap">${esc(fMes(c))}</button><button type="button" data-a="selmes" data-v="1" aria-label="Mes següent">›</button></span><span class="hint" style="margin:0" id="sel-n">${selTxt()}</span></div>
+  <div class="pk-grid">${h}</div>
+  <div class="legend"><span><i style="background:var(--sem)"></i>Seleccionat</span><span><i style="background:var(--ok-bg);border:1px solid var(--ok)"></i>Ja assignat</span><span><i style="background:var(--warn-bg);border:1px solid var(--warn)"></i>Ja enviat</span><span><i style="background:var(--vac-bg);border:1px solid var(--vac)"></i>Vacances</span><span><b class="mono">★</b> Calen més auditors</span></div></div>`;
+}
+const selTxt=()=>S.selDias.size?`${S.selDias.size} dia(es) seleccionat(s): ${[...S.selDias].sort().map(k=>fDMY(k).slice(0,5)).join(", ")}`:"Prem els dies en què estàs disponible";
+
+/* ---------- còpia de seguretat ---------- */
+function dadesBackup(){
+  const disp={};for(const[p,m]of S.dias){if(!m.size)continue;disp[p]={};for(const[f,d]of m)disp[p][f]=d}
+  const vac={};for(const[p,l]of S.vac)vac[p]={periodos:l};
+  return {versio:1,data:new Date().toISOString(),config:{equipo:{personas:S.equipo},planificacion:S.cfg},disp,vacaciones:vac};
+}
+async function restaura(file){
+  let d;try{d=JSON.parse(await file.text())}catch(e){toast("El fitxer no és una còpia vàlida.");return}
+  if(!d||!d.config){toast("El fitxer no és una còpia vàlida.");return}
+  await guarda(async()=>{
+    let n=0;const old=clone(S.equipo);
+    for(const[k,v]of Object.entries(d.config||{})){await S.db.doc(`config/${k}`).set(v);n++}
+    for(const[p,v]of Object.entries(d.vacaciones||{})){await S.db.doc(`vacaciones/${p}`).set(v);n++}
+    for(const[p,dies]of Object.entries(d.disp||{}))for(const[f,v]of Object.entries(dies)){await dref(p,f).set(v);n++}
+    if(window.SEM_SYNC_ROLS&&d.config?.equipo?.personas)await window.SEM_SYNC_ROLS(d.config.equipo.personas,old);
+    S.restN=n;
+  },"Còpia restaurada",file.name);
+}
+
+/* ---------- quadrant mensual ---------- */
+function quadrant(mes){
+  const[y,m]=mes.split("-").map(Number),n=new Date(y,m,0).getDate(),rows=[];
+  for(const p of auditores()){
+    const mm=S.dias.get(p)||new Map(),cells=[],comps=[];let tot=0;
+    const lib=new Set([...mm.values()].filter(d=>d.estado==="asignado"&&d.comp?.fecha).map(d=>d.comp.fecha));
+    for(let d=1;d<=n;d++){const k=`${mes}-${pad(d)}`,e=mm.get(k);let v="";
+      if(e?.estado==="asignado"){v=lib.has(k)?"AC":"A";tot++}else if(enVac(p,k))v="V";else if(lib.has(k))v="C";else if(e?.estado==="pendiente")v="?";
+      cells.push(v)}
+    for(const[f,d]of [...mm].sort((a,b)=>a[0].localeCompare(b[0])))if(d.estado==="asignado"&&f.startsWith(mes))comps.push({aud:f,comp:d.comp?.fecha||"",un:unitat(d.comp),terr:d.comp?.territorio||""});
+    rows.push({pid:p,cells,tot,comps});
+  }
+  return {mes,y,m,n,rows,totals:Array.from({length:n},(_,i)=>rows.filter(r=>r.cells[i][0]==="A").length),
+    wk:Array.from({length:n},(_,i)=>{const w=new Date(y,m-1,i+1).getDay();return w===0||w===6}),
+    titol:`${MESES[m-1]} ${y}`};
+}
+const QLEG="A: dia d'auditoria · C: dia de compensació · AC: auditoria i compensació el mateix dia · V: vacances · ?: disponibilitat pendent de validar";
+function vQuadrant(){
+  if(!S.quadMes)S.quadMes=ym(new Date());
+  const Q=quadrant(S.quadMes);
+  return `<section class="panel"><div class="toolbar"><h2>Quadrant mensual</h2><label class="f inline">Mes<input type="month" id="quad-mes" value="${S.quadMes}" style="width:auto"></label>
+    <span class="push acts"><button class="btn sm primary" data-a="qxlsx">Descarrega Excel</button><button class="btn sm primary" data-a="qpdf">Descarrega PDF</button></span></div>
+  <div class="scroll"><table class="quad"><thead><tr><th>Auditor/a</th>${Q.wk.map((w,i)=>`<th class="${w?"q-wk":""}">${i+1}</th>`).join("")}<th>Total</th></tr></thead><tbody>
+  ${Q.rows.map(r=>`<tr><td class="q-n">${esc(nombre(r.pid))}</td>${r.cells.map((v,i)=>`<td class="${v?"q-"+(v==="?"?"p":v):Q.wk[i]?"q-wk":""}">${v}</td>`).join("")}<td><b>${r.tot}</b></td></tr>`).join("")}
+  </tbody><tfoot><tr><td class="q-n">Auditors per dia</td>${Q.totals.map((t,i)=>`<td class="${t<minFor(`${Q.mes}-${pad(i+1)}`)?"badtxt":""}">${t}</td>`).join("")}<td><b>${Q.rows.reduce((a,r)=>a+r.tot,0)}</b></td></tr></tfoot></table></div>
+  <p class="hint">${QLEG}</p></section>`;
+}
+async function crearQuadrantXLSX(){
+  const Q=quadrant(S.quadMes),wb=new ExcelJS.Workbook();wb.creator="SEM · Planificació d'auditories";
+  const logo=wb.addImage({base64:logoPNG(),extension:"png"}),RED="FFD4192C",DARK="FF23282D",F={name:"Arial",size:9};
+  const FILL={A:"FFC6E9D2",AC:"FFC6E9D2",C:"FFFFE2A8",V:"FFCFDCF2","?":"FFFFFFFF"},WK="FFE9ECEF";
+  const fill=c=>({type:"pattern",pattern:"solid",fgColor:{argb:c}}),thin={style:"thin",color:{argb:"FFCFD4D9"}},box={top:thin,left:thin,bottom:thin,right:thin};
+  const ara=new Date(),gen=`${pad(ara.getDate())}/${pad(ara.getMonth()+1)}/${ara.getFullYear()} ${pad(ara.getHours())}:${pad(ara.getMinutes())}`;
+  const ws=wb.addWorksheet("Quadrant",{pageSetup:{orientation:"landscape",paperSize:9,fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.3,right:.3,top:.4,bottom:.4,header:.2,footer:.2}},views:[{showGridLines:false}]});
+  const N=Q.n+2;ws.columns=[{width:26},...Array.from({length:Q.n},()=>({width:3.7})),{width:7}];
+  ws.getRow(2).height=24;ws.addImage(logo,{tl:{col:0.1,row:0.6},ext:{width:200,height:43}});
+  ws.getCell(2,6).value=`Quadrant mensual · ${Q.titol}`;ws.getCell(2,6).font={name:"Arial",size:16,bold:true};
+  ws.getCell(3,6).value="Planificació d'auditories · SEM";ws.getCell(3,6).font={name:"Arial",size:10};
+  [["QUADRANT D'AUDITORIES",true],[`Generat: ${gen}`],[`Mes: ${Q.titol}`]].forEach(([t,b],i)=>{const c=ws.getCell(1+i,N);c.value=t;c.font={name:"Arial",size:8,bold:!!b};c.alignment={horizontal:"right"}});
+  ws.getRow(5).height=6;for(let c=1;c<=N;c++)ws.getCell(5,c).border={bottom:{style:"medium",color:{argb:RED}}};
+  let r=7;const hr=ws.getRow(r);
+  ["Auditor/a",...Array.from({length:Q.n},(_,i)=>i+1),"Total"].forEach((v,i)=>{const x=hr.getCell(i+1);x.value=v;x.font={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};x.fill=fill(DARK);x.alignment={horizontal:i?"center":"left"};x.border=box});r++;
+  for(const q of Q.rows){const row=ws.getRow(r);row.getCell(1).value=nombre(q.pid);row.getCell(1).font={...F,bold:true};row.getCell(1).border=box;
+    q.cells.forEach((v,i)=>{const x=row.getCell(i+2);x.value=v||null;x.font=F;x.alignment={horizontal:"center"};x.border=box;if(v)x.fill=fill(FILL[v]);else if(Q.wk[i])x.fill=fill(WK)});
+    const t=row.getCell(N);t.value=q.tot;t.font={...F,bold:true};t.alignment={horizontal:"center"};t.border=box;r++}
+  const tr=ws.getRow(r);tr.getCell(1).value="Auditors per dia";tr.getCell(1).font={...F,bold:true};
+  Q.totals.forEach((t,i)=>{const x=tr.getCell(i+2);x.value=t;x.alignment={horizontal:"center"};x.font={...F,bold:true,color:{argb:t<minFor(`${Q.mes}-${pad(i+1)}`)?RED:"FF1D2226"}};x.border={top:{style:"medium",color:{argb:"FF1D2226"}}}});
+  tr.getCell(N).value=Q.rows.reduce((a,q)=>a+q.tot,0);tr.getCell(N).font={...F,bold:true};tr.getCell(N).alignment={horizontal:"center"};r+=2;
+  ws.getCell(r,1).value=QLEG;ws.getCell(r,1).font={name:"Arial",size:8,italic:true};
+  ws.headerFooter.oddFooter="&L&8SEM · Planificació d'auditories&R&8Pàgina &P de &N";
+  const wc=wb.addWorksheet("Compensacions",{views:[{state:"frozen",ySplit:1}]});
+  wc.columns=[{header:"Auditor/a",width:26},{header:"Dia d'auditoria",width:16},{header:"Dia que compensa",width:18},{header:"Unitat on compensa",width:24},{header:"Territori",width:22}];
+  wc.getRow(1).eachCell(x=>{x.font={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};x.fill=fill(DARK)});
+  const dt=s=>{if(!s)return null;const[y,m,d]=s.split("-").map(Number);return new Date(Date.UTC(y,m-1,d))};
+  for(const q of Q.rows)for(const c of q.comps){const row=wc.addRow([nombre(q.pid),dt(c.aud),dt(c.comp),c.un,c.terr]);row.font=F;row.getCell(2).numFmt="dd/mm/yyyy";row.getCell(3).numFmt="dd/mm/yyyy"}
+  return await wb.xlsx.writeBuffer();
+}
+function crearQuadrantPDF(){
+  const Q=quadrant(S.quadMes),{jsPDF}=window.jspdf,doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"}),L=10,Rr=287;
+  const RED=[212,25,44],INK=[29,34,38],MUT=[93,102,110],COL={A:[198,233,210],AC:[198,233,210],C:[255,226,168],V:[207,220,242]};
+  const ara=new Date(),gen=`${pad(ara.getDate())}/${pad(ara.getMonth()+1)}/${ara.getFullYear()} ${pad(ara.getHours())}:${pad(ara.getMinutes())}`;
+  const marca=(x,y,s)=>{doc.setFont("helvetica","bold");doc.setFontSize(s);doc.setTextColor(...INK);doc.text("emergències mèdiques",x,y);doc.setFillColor(...RED);const q=s*0.3;for(let i=0;i<4;i++)doc.rect(x+0.4+i*q*1.9,y+2.6,q,q,"F")};
+  marca(L,24,16);
+  doc.setFont("helvetica","bold");doc.setFontSize(16);doc.text(`Quadrant mensual · ${Q.titol}`,96,22);
+  doc.setFont("helvetica","normal");doc.setFontSize(10);doc.text("Planificació d'auditories · SEM",96,29);
+  doc.setFontSize(8);doc.setFont("helvetica","bold");doc.text("QUADRANT D'AUDITORIES",Rr,14,{align:"right"});
+  doc.setFont("helvetica","normal");doc.setTextColor(...MUT);doc.text(`Generat: ${gen}`,Rr,18.5,{align:"right"});doc.text(`Mes: ${Q.titol}`,Rr,22.7,{align:"right"});
+  doc.setDrawColor(...RED);doc.setLineWidth(0.6);doc.line(L,35,Rr,35);
+  const seccio=(y,t)=>{doc.setFillColor(241,242,244);doc.rect(L,y,Rr-L,8,"F");doc.setFillColor(...RED);doc.rect(L,y,1.6,8,"F");doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(...INK);doc.text(t,L+4.5,y+5.6)};
+  seccio(40,"1. QUADRANT DEL MES");
+  const cs={0:{cellWidth:44,halign:"left",fontStyle:"bold"}};
+  doc.autoTable({theme:"grid",startY:52,margin:{left:L,right:10,bottom:14},styles:{font:"helvetica",fontSize:7,cellPadding:1.1,halign:"center",textColor:INK,lineColor:[207,212,217],lineWidth:0.1},
+    headStyles:{fillColor:[35,40,45],textColor:255,fontStyle:"bold"},footStyles:{fillColor:[255,255,255],textColor:INK,fontStyle:"bold"},columnStyles:cs,
+    head:[["Auditor/a",...Array.from({length:Q.n},(_,i)=>i+1),"Total"]],
+    body:Q.rows.map(q=>[nombre(q.pid),...q.cells,q.tot]),
+    foot:[["Auditors per dia",...Q.totals,Q.rows.reduce((a,q)=>a+q.tot,0)]],
+    didParseCell:d=>{const i=d.column.index-1;if(d.section==="head"&&d.column.index===0)d.cell.styles.halign="left";
+      if(d.section==="body"&&i>=0&&i<Q.n){const v=d.cell.raw;if(COL[v])d.cell.styles.fillColor=COL[v];else if(Q.wk[i])d.cell.styles.fillColor=[233,236,239]}
+      if(d.section==="foot"){if(d.column.index===0)d.cell.styles.halign="left";else if(i<Q.n&&d.cell.raw<minFor(`${Q.mes}-${pad(i+1)}`))d.cell.styles.textColor=RED}}});
+  let y=doc.lastAutoTable.finalY+5;doc.setFont("helvetica","italic");doc.setFontSize(7.5);doc.setTextColor(...MUT);doc.text(QLEG,L,y);
+  y+=9;if(y>165){doc.addPage();y=16}
+  seccio(y,"2. DIES A COMPENSAR");
+  const cb=Q.rows.flatMap(q=>q.comps.map(c=>[nombre(q.pid),fDMY(c.aud),fDMY(c.comp),c.un,c.terr]));
+  doc.autoTable({theme:"grid",startY:y+12,margin:{left:L,right:10,bottom:14},styles:{font:"helvetica",fontSize:8.5,cellPadding:1.6,textColor:INK,lineColor:[223,227,231],lineWidth:0.1},
+    headStyles:{fillColor:[35,40,45],textColor:255,fontStyle:"bold"},alternateRowStyles:{fillColor:[247,248,249]},
+    head:[["Auditor/a","Dia d'auditoria","Dia que compensa","Unitat on compensa","Territori"]],body:cb.length?cb:[["Sense dies d'auditoria aquest mes.","","","",""]]});
+  const np=doc.getNumberOfPages();
+  for(let i=1;i<=np;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(...MUT);doc.text("SEM · Planificació d'auditories · Generat "+gen,L,204.5);doc.text(`Pàgina ${i} de ${np}`,Rr,204.5,{align:"right"})}
+  return doc.output("arraybuffer");
+}
+
 /* ---------- objetivos y reglas (gestor) ---------- */
 function vObjetivos(){
   const mes=ym(S.cursor),dis=S.demo?"disabled":"";
@@ -957,34 +1186,36 @@ function vObjetivos(){
 
 /* ---------- equipo (gestor) ---------- */
 function vEquipo(){
-  const ids=Object.keys(S.equipo).sort(porNombre),dis=S.demo?"disabled":"";
+  const ids=Object.keys(S.equipo).sort(porNombre),dis=S.demo?"disabled":"",gh=!!window.SEM_AUTH;
   return `<div class="stack"><section class="panel"><h2>Equip i rols</h2>
   <p class="lead">El rol de gestor/a dona accés a totes les gestions. El rol d'auditor/a permet introduir la seva disponibilitat, les seves vacances i les seves compensacions. Una persona pot tenir tots dos.</p>
-  <div class="scroll"><table><thead><tr><th>Nom</th><th>Auditor/a</th><th>Gestor/a</th><th>Compte vinculat</th><th></th></tr></thead><tbody>
+  <div class="scroll"><table><thead><tr><th>Nom</th><th>Auditor/a</th><th>Gestor/a</th><th>${gh?"Usuari":"Compte vinculat"}</th><th></th></tr></thead><tbody>
   ${ids.map(p=>{const q=S.equipo[p],acc=q.uid?(S.names.get(q.uid)||"Vinculat"):"";
     return `<tr><td><input class="wide" id="eq-n-${esc(p)}" data-eqname="${esc(p)}" value="${esc(q.nombre)}" aria-label="Nom" ${dis}></td>
     <td><input type="checkbox" id="eq-a-${esc(p)}" data-eqrole="auditor" data-p="${esc(p)}" ${q.auditor?"checked":""} aria-label="Auditor" ${dis}></td>
     <td><input type="checkbox" id="eq-g-${esc(p)}" data-eqrole="gestor" data-p="${esc(p)}" ${q.gestor?"checked":""} aria-label="Gestor" ${dis}></td>
-    <td>${q.uid?`${esc(acc)}${q.uid===S.uid?" (tu)":""} ${S.demo?"":`<button class="btn sm" data-a="unlink" data-p="${esc(p)}">Desvincula</button>`}`:`<span class="muted">Sense vincular</span>`}</td>
+    <td>${gh?`<input class="mid" id="eq-u-${esc(p)}" data-equser="${esc(p)}" value="${esc(q.usuario||"")}" placeholder="p. ex. pvazquez" aria-label="Usuari de ${esc(q.nombre)}" autocomplete="off" ${dis}>`:q.uid?`${esc(acc)}${q.uid===S.uid?" (tu)":""} ${S.demo?"":`<button class="btn sm" data-a="unlink" data-p="${esc(p)}">Desvincula</button>`}`:`<span class="muted">Sense vincular</span>`}</td>
     <td>${S.demo?"":`<button class="btn sm danger" data-a="delpers" data-p="${esc(p)}">Elimina</button>`}</td></tr>`}).join("")}
   </tbody></table></div>
   <form class="form mt" data-form="addpers"><label class="f">Persona nova<input id="np-nombre" name="nombre" required maxlength="60" placeholder="Nom i cognom"></label>
     <label class="f chk"><span><input type="checkbox" id="np-a" name="auditor" checked> Auditor/a</span></label>
     <label class="f chk"><span><input type="checkbox" id="np-g" name="gestor"> Gestor/a</span></label>
     <div><button class="btn primary" ${dis}>Afegeix a l'equip</button></div></form>
-  ${window.SEM_AUTH&&S.owner?`<div class="addday mt"><h3>Importa dades inicials</h3><p class="hint">Carrega el fitxer dades-inicials.json per omplir l'equip, les regles i els dies ja planificats. Sobreescriu el que hi hagi.</p><input type="file" id="imp-file" accept=".json,application/json"></div>`:""}
-  <p class="hint">Cada persona vincula el seu nom el primer cop que obre l'aplicació. Si algú s'equivoca de nom, prem "Desvincula" i que torni a entrar.</p></section></div>`;
+  <p class="hint">${gh?"Escriu al costat de cada persona el seu usuari: el mateix que has creat a Firebase, sense la part de l'arrova. Sense usuari assignat, aquella persona no pot veure ni modificar res.":`Cada persona vincula el seu nom el primer cop que obre l'aplicació. Si algú s'equivoca de nom, prem "Desvincula" i que torni a entrar.`}</p></section>
+  <section class="panel"><h2>Còpia de seguretat</h2>
+  <p class="lead">Descarrega un fitxer amb totes les dades: equip, regles, disponibilitats, compensacions i vacances. Si restaures una còpia, se sobreescriuen els registres que conté el fitxer; els que s'hagin creat després no s'esborren.</p>
+  <div class="toolbar" style="margin-bottom:0"><button class="btn primary" data-a="backup" ${dis}>Descarrega una còpia</button><label class="f inline">Restaura una còpia<input type="file" id="rest-file" accept=".json,application/json" style="width:auto" ${dis}></label></div></section></div>`;
 }
 
 /* ---------- escrituras ---------- */
 const dref=(p,f)=>S.db.doc(`disp/${p}/dias/${f}`);
 const saveCfg=c=>S.db.doc("config/planificacion").set(c);
-const saveEq=e=>S.db.doc("config/equipo").set({personas:e});
-async function guarda(fn,ok){
+const saveEq=async e=>{const old=clone(S.equipo);await S.db.doc("config/equipo").set({personas:e});if(window.SEM_SYNC_ROLS)await window.SEM_SYNC_ROLS(e,old)};
+async function guarda(fn,ok,det){
   if(S.demo){toast("A la vista d'exemple no es desen els canvis");return}
   if(preview()){toast(`Vista prèvia com a ${nombre(S.verComo)}: no es desen els canvis`);return}
   if(S.busy)return;S.busy=true;
-  try{await fn();if(ok)toast(ok)}
+  try{await fn();if(ok){toast(ok);logA(ok,det)}}
   catch(e){toast(e?.code==="permission_denied"||e?.code==="invalid_argument"?"No tens permís per fer aquest canvi.":"No s'ha pogut desar. Revisa la connexió i torna-ho a provar.")}
   finally{S.busy=false}
 }
@@ -1006,22 +1237,36 @@ document.addEventListener("click",ev=>{
   if(a==="infxlsx"){exportar("xlsx");return}
   if(a==="infpdf"){exportar("pdf");return}
   if(a==="infcopy"){navigator.clipboard.writeText(textInforme()).then(()=>toast("Informe copiat: enganxa'l a l'Excel o en un correu")).catch(()=>toast("No s'ha pogut copiar. Selecciona la taula i copia-la manualment."));return}
+  if(a==="proposa"){const P=calculaProposta();if(!P.length){toast("No hi ha res a proposar: els dies amb disponibilitat ja tenen el mínim cobert");return}S.proposta=P;render();return}
+  if(a==="propno"){S.proposta=null;render();return}
+  if(a==="propok"){const l=(S.proposta||[]).filter(x=>S.dias.get(x.pid)?.get(x.fecha)?.estado==="pendiente"&&!enVac(x.pid,x.fecha));S.proposta=null;
+    guarda(async()=>{for(const x of l)await dref(x.pid,x.fecha).update({estado:"asignado",revisado:new Date().toISOString()})},`${l.length} dia(es) assignats segons la proposta`,l.map(x=>`${corto(x.pid)} ${fDMY(x.fecha).slice(0,5)}`).join(", ")).then(render);return}
+  if(a==="editsol"){S.editSol=v;render();return}
+  if(a==="cancelsol"){S.editSol=null;render();return}
+  if(a==="solok"){guarda(()=>dref(p,f).update({estado:"descartado",revisado:new Date().toISOString(),solicitud:{estado:"acceptada",resolta:new Date().toISOString()}}),"Sol·licitud de canvi acceptada",`${nombre(p)} · ${fDMY(f)}`);return}
+  if(a==="solno"){guarda(()=>dref(p,f).update({solicitud:{estado:"rebutjada",resolta:new Date().toISOString()}}),"Sol·licitud de canvi rebutjada",`${nombre(p)} · ${fDMY(f)}`);return}
+  if(a==="seldia"){if(S.selDias.has(v))S.selDias.delete(v);else S.selDias.add(v);b.setAttribute("aria-pressed",S.selDias.has(v));const n=$("sel-n");if(n)n.textContent=selTxt();const sb=$("multi-btn");if(sb)sb.textContent=`Envia la disponibilitat (${S.selDias.size})`;return}
+  if(a==="selmes"){S.selMes=new Date(S.selMes.getFullYear(),S.selMes.getMonth()+(+v),1);render();return}
+  if(a==="avisok"){try{localStorage.setItem(lvKey(),new Date().toISOString())}catch(e){}S.avisOk=true;render();return}
+  if(a==="backup"){guardarArchivo(`copia-seguretat-auditories_${todayIso}.json`,JSON.stringify(dadesBackup(),null,1));logA("Còpia de seguretat descarregada");return}
+  if(a==="qxlsx"){exportar("qxlsx");return}
+  if(a==="qpdf"){exportar("qpdf");return}
   if(a==="sitano"){S.sitYear+=(+v);render();return}
   if(a==="skiplink"){S.skipLink=true;render();return}
   if(a==="estado"){
     if(v==="asignado"&&enVac(p,f)){toast("No es pot assignar: està de vacances aquell dia");return}
-    guarda(()=>dref(p,f).update({estado:v,revisado:new Date().toISOString()}),v==="asignado"?"Dia assignat":v==="descartado"?"Disponibilitat descartada":"Tornada a pendent");return}
+    guarda(()=>dref(p,f).update({estado:v,revisado:new Date().toISOString()}),v==="asignado"?"Dia assignat":v==="descartado"?"Disponibilitat descartada":"Tornada a pendent",`${nombre(p)} · ${fDMY(f)}`);return}
   if(a==="asigntodo"){const l=pendientes().filter(e=>e.fecha===v&&!enVac(e.pid,v));
-    guarda(async()=>{for(const e of l)await dref(e.pid,v).update({estado:"asignado",revisado:new Date().toISOString()})},`${l.length} disponibilitat(s) assignada(es)`);return}
+    guarda(async()=>{for(const e of l)await dref(e.pid,v).update({estado:"asignado",revisado:new Date().toISOString()})},`${l.length} disponibilitat(s) assignada(es)`,fDMY(v));return}
   if(a==="editcomp"){S.editComp=v;render();return}
   if(a==="cancelcomp"){S.editComp=null;render();return}
-  if(a==="borrar"){if(!confirmar(b,"Segur? Retira"))return;guarda(()=>dref(p,f).delete(),"Disponibilitat retirada");return}
-  if(a==="delvac"){if(!confirmar(b,"Segur? Elimina"))return;const l=(S.vac.get(p)||[]).filter(x=>x.id!==v);guarda(()=>S.db.doc(`vacaciones/${p}`).set({periodos:l}),"Vacances eliminades");return}
-  if(a==="delmin"){const c=clone(S.cfg);delete c.minDias[v];guarda(()=>saveCfg(c),"Mínim del dia restablert");return}
-  if(a==="unlink"){if(!confirmar(b,"Segur? Desvincula"))return;const e=clone(S.equipo);e[p].uid=null;guarda(()=>saveEq(e),"Compte desvinculat");return}
+  if(a==="borrar"){if(!confirmar(b,"Segur? Retira"))return;guarda(()=>dref(p,f).delete(),"Disponibilitat retirada",`${nombre(p)} · ${fDMY(f)}`);return}
+  if(a==="delvac"){if(!confirmar(b,"Segur? Elimina"))return;const l=(S.vac.get(p)||[]).filter(x=>x.id!==v);guarda(()=>S.db.doc(`vacaciones/${p}`).set({periodos:l}),"Vacances eliminades",nombre(p));return}
+  if(a==="delmin"){const c=clone(S.cfg);delete c.minDias[v];guarda(()=>saveCfg(c),"Mínim del dia restablert",fDMY(v));return}
+  if(a==="unlink"){if(!confirmar(b,"Segur? Desvincula"))return;const e=clone(S.equipo);e[p].uid=null;guarda(()=>saveEq(e),"Compte desvinculat",nombre(p));return}
   if(a==="delpers"){
     if(S.equipo[p].gestor&&gestores().length<=1){toast("Ha de quedar com a mínim un gestor/a");return}
-    if(!confirmar(b,"Segur? Elimina"))return;const e=clone(S.equipo);delete e[p];guarda(()=>saveEq(e),"Persona eliminada de l'equip");return}
+    if(!confirmar(b,"Segur? Elimina"))return;const e=clone(S.equipo);delete e[p];guarda(()=>saveEq(e),"Persona eliminada de l'equip",nombre(p));return}
 });
 document.addEventListener("change",ev=>{
   const t=ev.target;
@@ -1031,11 +1276,16 @@ document.addEventListener("change",ev=>{
   if(t.id==="sit-pid"){S.sitPid=t.value;render();return}
   if(t.id==="vac-pid"){S.vacPid=t.value;render();return}
   if(t.id==="d-franja"){const fr=FRANJAS[t.value];if(fr.i){$("d-ini").value=fr.i;$("d-fin").value=fr.f}return}
-  if(t.id==="daymin"){const k=t.dataset.k,v=parseInt(t.value,10);if(!(v>=1))return;const c=clone(S.cfg);c.minDias=c.minDias||{};if(v===c.minPorDia)delete c.minDias[k];else c.minDias[k]=v;guarda(()=>saveCfg(c),`Mínim del dia: ${v}`);return}
+  if(t.id==="daymin"){const k=t.dataset.k,v=parseInt(t.value,10);if(!(v>=1))return;const c=clone(S.cfg);c.minDias=c.minDias||{};if(v===c.minPorDia)delete c.minDias[k];else c.minDias[k]=v;guarda(()=>saveCfg(c),`Mínim del dia: ${v}`,fDMY(k));return}
   if(t.dataset.obj){const p=t.dataset.obj,mes=ym(S.cursor),v=t.value===""?null:parseInt(t.value,10);const c=clone(S.cfg);c.objetivosMes=c.objetivosMes||{};c.objetivosMes[mes]=c.objetivosMes[mes]||{};
     if(v===null||Number.isNaN(v))delete c.objetivosMes[mes][p];else c.objetivosMes[mes][p]=Math.max(0,Math.min(31,v));
     if(!Object.keys(c.objetivosMes[mes]).length)delete c.objetivosMes[mes];
     guarda(()=>saveCfg(c),`Objectiu de ${nombre(p)} per a ${fMes(S.cursor)} actualitzat`);return}
+  if(t.id==="quad-mes"){if(t.value){S.quadMes=t.value;render()}return}
+  if(t.id==="rest-file"){if(t.files[0])restaura(t.files[0]).then(()=>{t.value=""});return}
+  if(t.dataset.equser!==undefined){const p=t.dataset.equser,u=t.value.trim().toLowerCase().replace(/@.*$/,"");
+    if(u&&Object.keys(S.equipo).some(q=>q!==p&&S.equipo[q].usuario===u)){toast("Aquest usuari ja està assignat a una altra persona");t.value=S.equipo[p].usuario||"";return}
+    const e=clone(S.equipo);e[p].usuario=u||null;guarda(()=>saveEq(e),"Usuari assignat",`${nombre(p)} · ${u||"cap"}`);return}
   if(t.dataset.eqname){const p=t.dataset.eqname,n=t.value.trim();if(!n){t.value=nombre(p);return}const e=clone(S.equipo);e[p].nombre=n;guarda(()=>saveEq(e),"Nom actualitzat");return}
   if(t.dataset.eqrole){const p=t.dataset.p,r=t.dataset.eqrole;
     if(r==="gestor"&&!t.checked&&gestores().length<=1){t.checked=true;toast("Ha de quedar com a mínim un gestor/a");return}
@@ -1050,15 +1300,20 @@ document.addEventListener("submit",ev=>{
     const ex=S.dias.get(me)?.get(fd.fecha);
     if(ex&&ex.estado==="asignado"){toast("Aquest dia ja està assignat. Demana al gestor/a que el modifiqui.");return}
     if(fd.inicio===fd.fin){toast("L'hora d'inici i la de fi no poden coincidir");return}
-    guarda(async()=>{await dref(me,fd.fecha).set({fecha:fd.fecha,franja:fd.franja,inicio:fd.inicio,fin:fd.fin,nota:(fd.nota||"").trim(),estado:"pendiente",enviado:new Date().toISOString()});f.reset();$("d-ini").value=FRANJAS.manana.i;$("d-fin").value=FRANJAS.manana.f},"Disponibilitat enviada al gestor/a");return}
+    guarda(async()=>{await dref(me,fd.fecha).set({fecha:fd.fecha,franja:fd.franja,inicio:fd.inicio,fin:fd.fin,nota:(fd.nota||"").trim(),estado:"pendiente",enviado:new Date().toISOString()});f.reset();$("d-ini").value=FRANJAS.manana.i;$("d-fin").value=FRANJAS.manana.f},"Disponibilitat enviada al gestor/a",`${nombre(me)} · ${fDMY(fd.fecha)}`);return}
+  if(k==="sol"){const p=f.dataset.p,fecha=f.dataset.f;guarda(async()=>{await dref(p,fecha).update({solicitud:{motivo:fd.motivo.trim(),fecha:new Date().toISOString(),estado:"pendent"}});S.editSol=null},"Sol·licitud de canvi enviada",`${nombre(p)} · ${fDMY(fecha)} · ${fd.motivo.trim()}`);return}
+  if(k==="dispmulti"){const dies=[...S.selDias].sort().filter(d=>d>=todayIso&&!enVac(me,d)&&!S.dias.get(me)?.get(d));
+    if(!dies.length){toast("Selecciona com a mínim un dia al calendari");return}
+    if(fd.inicio===fd.fin){toast("L'hora d'inici i la de fi no poden coincidir");return}
+    guarda(async()=>{for(const d of dies)await dref(me,d).set({fecha:d,franja:fd.franja,inicio:fd.inicio,fin:fd.fin,nota:(fd.nota||"").trim(),estado:"pendiente",enviado:new Date().toISOString()});S.selDias.clear()},`Disponibilitat enviada: ${dies.length} dia(es)`,`${nombre(me)} · ${dies.map(d=>fDMY(d).slice(0,5)).join(", ")}`);return}
   if(k==="comp"){const p=f.dataset.p,fecha=f.dataset.f;
-    guarda(async()=>{await dref(p,fecha).update({comp:{fecha:fd.fecha,recurso:fd.recurso.trim(),territorio:fd.territorio.trim(),inicio:fd.inicio,fin:fd.fin},compInformada:new Date().toISOString()});S.editComp=null},"Compensació desada");return}
+    guarda(async()=>{await dref(p,fecha).update({comp:{fecha:fd.fecha,recurso:fd.recurso.trim(),indicativo:fd.indicativo.trim().toUpperCase(),territorio:fd.territorio.trim(),inicio:fd.inicio,fin:fd.fin},compInformada:new Date().toISOString()});S.editComp=null},"Compensació desada",`${nombre(p)} · auditoria ${fDMY(fecha)} · compensa ${fDMY(fd.fecha)} a ${fd.recurso} ${fd.indicativo.toUpperCase()}`);return}
   if(k==="vac"){const p=S.vacPid;if(fd.hasta<fd.desde){toast("La data final no pot ser anterior a la inicial");return}
     const l=(S.vac.get(p)||[]).slice();if(l.some(v=>fd.desde<=v.hasta&&v.desde<=fd.hasta)){toast("Se solapa amb un altre període de vacances");return}
     l.push({id:Date.now().toString(36),desde:fd.desde,hasta:fd.hasta,nota:(fd.nota||"").trim()});
-    guarda(async()=>{await S.db.doc(`vacaciones/${p}`).set({periodos:l});f.reset()},"Vacances registrades");return}
+    guarda(async()=>{await S.db.doc(`vacaciones/${p}`).set({periodos:l});f.reset()},"Vacances registrades",`${nombre(p)} · ${fDMY(fd.desde)} – ${fDMY(fd.hasta)}`);return}
   if(k==="cfg"){const c=clone(S.cfg);c.minPorDia=Math.max(1,parseInt(fd.minPorDia,10)||2);c.objetivoDefecto=Math.max(0,parseInt(fd.objetivoDefecto,10)||0);guarda(()=>saveCfg(c),"Regles desades");return}
-  if(k==="minday"){const c=clone(S.cfg);c.minDias=c.minDias||{};c.minDias[fd.fecha]=Math.max(1,parseInt(fd.min,10)||1);guarda(async()=>{await saveCfg(c);f.reset()},"Dia amb mínim especial afegit");return}
+  if(k==="minday"){const c=clone(S.cfg);c.minDias=c.minDias||{};c.minDias[fd.fecha]=Math.max(1,parseInt(fd.min,10)||1);guarda(async()=>{await saveCfg(c);f.reset()},"Dia amb mínim especial afegit",`${fDMY(fd.fecha)} · mínim ${fd.min}`);return}
   if(k==="addpers"){const n=fd.nombre.trim();if(!n)return;let id=slug(n),i=2;while(S.equipo[id])id=slug(n)+"-"+i++;
     const e=clone(S.equipo);e[id]={nombre:n,auditor:!!fd.auditor,gestor:!!fd.gestor,uid:null};guarda(async()=>{await saveEq(e);f.reset()},`${n} afegit/da a l'equip`);return}
 });
@@ -1080,7 +1335,7 @@ async function start(){
   claude.use("downloads").then(d=>{S.dl=d;render()}).catch(()=>{});
   const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
   if(!db){demo();return}
-  S.db=db;S.user=user;
+  S.db=db;S.user=user;S.username=window.SEM_USER?window.SEM_USER():null;
   try{if(user){S.uid=await user.id();S.owner=await user.isOwner();const cw=await user.can("data.write");S.canWrite=cw!==false}}catch(e){}
   const timer=setTimeout(()=>{S.stale=true;S.loaded=true;render()},10000);
   db.doc("config/equipo").onSnapshot(s=>{if(!s.metadata.fromCache){clearTimeout(timer);S.stale=false}S.eqLoaded=true;S.loaded=true;S.equipo=s.exists?clone(s.data().personas):{};syncSubs();resolveNames();render()},()=>{clearTimeout(timer);S.stale=true;S.loaded=true;render()});
