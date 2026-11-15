@@ -419,10 +419,16 @@ const asignados=(list)=>list.filter(e=>e.estado==="asignado").length;
 function asignadosMes(p,mes){let n=0;const m=S.dias.get(p);if(m)for(const[f,d]of m)if(d.estado==="asignado"&&f.startsWith(mes))n++;return n}
 function vacDiasMes(p,mes){const[y,m]=mes.split("-").map(Number),days=new Date(y,m,0).getDate();let n=0;for(let d=1;d<=days;d++)if(enVac(p,`${mes}-${pad(d)}`))n++;return n}
 const pendientes=()=>entradas().filter(e=>e.estado==="pendiente").sort((a,b)=>a.fecha.localeCompare(b.fecha)||porNombre(a.pid,b.pid));
-const compOk=c=>!!(c&&c.recurso&&c.indicativo&&c.territorio);
+const COMP_CAMPS=[["fecha","el dia que lliures"],["recurso","el tipus d'unitat"],["indicativo","l'indicatiu de la unitat"],["territorio","el territori"],["inicio","l'hora d'inici"],["fin","l'hora de fi"]];
+const compFalta=c=>COMP_CAMPS.filter(([k])=>!String(c?.[k]??"").trim()).map(x=>x[1]);
+const compOk=c=>!!c&&!compFalta(c).length;
+const HORES=d=>{const o=[];for(let m=360;m<=(d==="24"?480:540);m+=30)o.push(`${pad(Math.floor(m/60))}:${pad(m%60)}`);return o};
+const fiDe=(ini,d)=>{if(d==="24")return ini;const[h,m]=ini.split(":").map(Number);return `${pad((h+12)%24)}:${pad(m)}`};
+const durTxt=c=>c?.durada==="24"?" (24 h)":c?.durada==="12"?" (12 h)":"";
+const horaComp=c=>c?.inicio?`${c.inicio}-${c.fin}${durTxt(c)}`:"";
 const unitat=c=>c?[c.recurso,c.indicativo].filter(Boolean).join(" "):"";
 const hor=e=>e.inicio?`${e.inicio}–${e.fin}`:"Horari no indicat";
-function compTxt(c){if(!c)return "";const d=c.fecha?`Lliura el ${fCorta(c.fecha)}`:"Lliura";const r=compOk(c)?` a ${esc(unitat(c))} · ${esc(c.territorio)}`:(c.recurso||c.indicativo||c.territorio?` · ${esc([unitat(c),c.territorio].filter(Boolean).join(" · "))} · falta ${!c.recurso?"el tipus d'unitat":!c.indicativo?"l'indicatiu":"el territori"}`:" · unitat i territori per informar");const h=c.inicio?` · <span class="mono">${esc(c.inicio)}–${esc(c.fin)}</span>`:"";return esc(d)+r+h}
+function compTxt(c){if(!c)return "";const d=c.fecha?`Lliura el ${fCorta(c.fecha)}`:"Lliura";const r=c.recurso||c.indicativo||c.territorio?` a ${esc([unitat(c),c.territorio].filter(Boolean).join(" · "))}`:"";const ft=compOk(c)?"":` · falta ${esc(compFalta(c).join(", "))}`;const h=c.inicio&&c.fin?` · <span class="mono">${esc(c.inicio)}–${esc(c.fin)}${durTxt(c)}</span>`:"";return esc(d)+r+h+ft}
 const sinComp=p=>entradas().filter(e=>e.estado==="asignado"&&!compOk(e.comp)&&(!p||e.pid===p)).sort((a,b)=>a.fecha.localeCompare(b.fecha));
 const visibles=list=>soloPropio()?list.filter(e=>e.pid===mePid()):S.filtro==="todos"?list:list.filter(e=>e.pid===S.filtro);
 const deVacaciones=k=>(soloPropio()?[mePid()].filter(Boolean):auditores()).filter(p=>enVac(p,k));
@@ -597,13 +603,16 @@ function itemHTML(e,showName){
 }
 function compForm(e){
   const c=e.comp||{};
+  const dur=c.durada||(c.inicio&&c.fin?(c.inicio===c.fin?"24":(HORES("12").includes(c.inicio)&&fiDe(c.inicio,"12")===c.fin?"12":"altres")):"12"),alt=dur==="altres";
   return `<form class="compform form" data-form="comp" data-p="${esc(e.pid)}" data-f="${e.fecha}">
     <label class="f">Dia que lliures<input id="c-fecha" name="fecha" type="date" required value="${esc(c.fecha||e.fecha)}"></label>
     <label class="f">Tipus d'unitat<select id="c-rec" name="recurso" required><option value="">Selecciona…</option>${[...new Set([...RECURSOS,...(c.recurso?[c.recurso]:[])])].map(r=>`<option value="${esc(r)}" ${c.recurso===r?"selected":""}>${esc(r)}</option>`).join("")}</select></label>
     <label class="f">Indicatiu de la unitat<input id="c-ind" name="indicativo" required maxlength="10" style="text-transform:uppercase" value="${esc(c.indicativo||"")}" placeholder="p. ex. N301, B202"></label>
     <label class="f">Territori<input id="c-ter" name="territorio" list="dl-ter" required value="${esc(c.territorio||"")}"></label>
-    <label class="f">Des de<input id="c-ini" name="inicio" type="time" required value="${esc(c.inicio||e.inicio||"")}"></label>
-    <label class="f">Fins a<input id="c-fin" name="fin" type="time" required value="${esc(c.fin||e.fin||"")}"></label>
+    <label class="f">Durada<select id="c-dur" name="durada">${[["12","12 hores"],["24","24 hores"],["altres","Altres"]].map(([v,l])=>`<option value="${v}" ${dur===v?"selected":""}>${l}</option>`).join("")}</select></label>
+    <label class="f">Hora d'inici<select id="c-ini-s" name="inicio" required ${alt?"hidden disabled":""}><option value="">Selecciona…</option>${HORES(alt?"12":dur).map(h=>`<option ${!alt&&c.inicio===h?"selected":""}>${h}</option>`).join("")}</select><input id="c-ini-t" name="inicio" type="time" required value="${esc(alt?c.inicio||"":"")}" ${alt?"":"hidden disabled"}></label>
+    <label class="f">Hora de fi<input id="c-fin" name="fin" type="time" required value="${esc(c.fin||"")}" ${alt?"":"readonly"}></label>
+    <p class="hint span" style="margin:0">Torns de 12 hores amb inici entre les 06:00 i les 09:00, o de 24 hores amb inici entre les 06:00 i les 08:00, cada 30 minuts. L'hora de fi es calcula sola. Tria «Altres» només si el torn és diferent.</p>
     <div class="acts"><button type="button" class="btn sm" data-a="cancelcomp">Cancel·la</button><button class="btn sm primary">Desa la compensació</button></div>
     <datalist id="dl-ter">${TERRITORIOS.map(r=>`<option value="${esc(r)}">`).join("")}</datalist></form>`;
 }
@@ -676,7 +685,7 @@ function vMis(){
       <div class="stat"><span>Dies assignats · ${esc(fMes(new Date()))}</span><b>${a}<small> / ${o}</small></b></div>
       <div class="stat ${pp?"warn":""}"><span>Pendents de validar pel gestor</span><b>${pp}</b></div>
     </div>
-    ${sc.length?`<section class="panel alert"><h2>Compensacions pendents d'informar</h2><p class="lead">Dies que ja tens assignats. Indica el tipus d'unitat, el seu indicatiu (per exemple N301), el territori i l'horari.</p><div class="list">${sc.map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
+    ${sc.length?`<section class="panel alert"><h2>Compensacions pendents d'informar</h2><p class="lead">Dies que ja tens assignats. Indica el dia que lliures, el tipus d'unitat, l'indicatiu (per exemple N301), el territori, la durada del torn i l'hora d'inici. Tots els camps són obligatoris.</p><div class="list">${sc.map(e=>itemHTML(e,false)).join("")}</div></section>`:""}
     <section class="panel"><h2>Afegeix disponibilitat</h2><p class="lead">Marca al calendari tots els dies en què estàs disponible, tria la franja horària i envia'ls d'un sol cop. El gestor/a validarà quins dies se t'assignen.</p>
     ${pickerDies()}
     <form class="form mt" data-form="dispmulti">
@@ -800,9 +809,9 @@ function datosInforme(){
   const all=grups.flatMap(g=>g.rows);
   return {grups,total:all.length,inf:all.filter(e=>compOk(e.comp)).length,pend:all.filter(e=>!compOk(e.comp)).length};
 }
-const compEstado=e=>compOk(e.comp)?"Informada":e.comp?.fecha?"Falta unitat, indicatiu o territori":"Sense informar";
+const compEstado=e=>compOk(e.comp)?"Informada":e.comp?.fecha?"Incompleta":"Sense informar";
 const hora=(a,b)=>a?`${a}-${b}`:"";
-const filaAud=e=>[fDMY(e.fecha),hora(e.inicio,e.fin),fDMY(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)];
+const filaAud=e=>[fDMY(e.fecha),hora(e.inicio,e.fin),fDMY(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",horaComp(e.comp),compEstado(e)];
 const CAPS_DET=["Dia d'auditoria","Horari","Dia que compensa","Unitat on compensa","Territori","Horari de compensació","Estat"];
 function vInforme(){
   if(!S.inf) S.inf=infDefaults();
@@ -827,7 +836,7 @@ function vInforme(){
     </div>
     ${D.grups.length?D.grups.map(g=>`<section class="panel"><div class="toolbar" style="margin-bottom:8px"><h2>${esc(nombre(g.pid))}</h2><span class="push mono">${g.rows.length} dia(es) d'auditoria${g.rows.filter(e=>!compOk(e.comp)).length?` · <span class="badtxt">${g.rows.filter(e=>!compOk(e.comp)).length} per informar</span>`:""}</span></div>
       ${g.rows.length?`<div class="scroll"><table class="inf"><thead><tr>${CAPS_DET.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>
-      ${g.rows.map(e=>`<tr><td class="mono"><b>${fDMY(e.fecha)}</b> <span class="muted">${esc(parse(e.fecha).toLocaleDateString("ca-ES",{weekday:"short"}))}</span></td><td class="mono">${esc(hora(e.inicio,e.fin))}</td><td class="mono">${fDMY(e.comp?.fecha)}</td><td>${esc(unitat(e.comp))}</td><td>${esc(e.comp?.territorio||"")}</td><td class="mono">${esc(hora(e.comp?.inicio,e.comp?.fin))}</td><td class="${compOk(e.comp)?"oktxt":"badtxt"}">${compEstado(e)}</td></tr>`).join("")}
+      ${g.rows.map(e=>`<tr><td class="mono"><b>${fDMY(e.fecha)}</b> <span class="muted">${esc(parse(e.fecha).toLocaleDateString("ca-ES",{weekday:"short"}))}</span></td><td class="mono">${esc(hora(e.inicio,e.fin))}</td><td class="mono">${fDMY(e.comp?.fecha)}</td><td>${esc(unitat(e.comp))}</td><td>${esc(e.comp?.territorio||"")}</td><td class="mono">${esc(horaComp(e.comp))}</td><td class="${compOk(e.comp)?"oktxt":"badtxt"}">${compEstado(e)}</td></tr>`).join("")}
       </tbody></table></div>`:`<p class="empty">Sense dies d'auditoria en aquest període.</p>`}</section>`).join(""):`<section class="panel"><p class="empty">No hi ha dies d'auditoria en aquestes dates.</p></section>`}`}${vQuadrant()}</div>`;
 }
 function textInforme(){
@@ -908,7 +917,7 @@ async function crearXLSX(){
     ws.mergeCells(`A${r}:${last}${r}`);const t=ws.getCell(`A${r}`);t.value=`${nombre(g.pid)} · ${g.rows.length} dia(es) d'auditoria`;t.font={name:"Arial",size:11,bold:true,color:{argb:"FF1D2226"}};t.border={bottom:{style:"thin",color:{argb:RED}}};ws.getRow(r).height=20;r++;
     if(!g.rows.length){ws.getCell(`A${r}`).value="Sense dies d'auditoria en aquest període.";ws.getCell(`A${r}`).font={...F,italic:true};r+=2;continue}
     capcalera(CAPS_DET);
-    g.rows.forEach((e,j)=>fila([dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)],j,{date:[1,0,1],red:(i,v)=>i===6&&v!=="Informada"}));
+    g.rows.forEach((e,j)=>fila([dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",horaComp(e.comp),compEstado(e)],j,{date:[1,0,1],red:(i,v)=>i===6&&v!=="Informada"}));
     r++;
   }
   ws.headerFooter.oddFooter="&L&8SEM · Planificació d'auditories&R&8Pàgina &P de &N";
@@ -916,7 +925,7 @@ async function crearXLSX(){
   const wd=wb.addWorksheet("Dades",{views:[{state:"frozen",ySplit:1}]});
   wd.columns=[{header:"Auditor/a",width:24},...CAPS_DET.map((h,i)=>({header:h,width:COLS[i].w}))];
   wd.getRow(1).eachCell(x=>{x.font={name:"Arial",size:9,bold:true,color:{argb:"FFFFFFFF"}};x.fill={type:"pattern",pattern:"solid",fgColor:{argb:DARK}};x.alignment={wrapText:true,vertical:"middle"}});
-  for(const g of D.grups)for(const e of g.rows){const row=wd.addRow([nombre(g.pid),dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",hora(e.comp?.inicio,e.comp?.fin),compEstado(e)]);row.font=F;row.getCell(2).numFmt="dd/mm/yyyy";row.getCell(4).numFmt="dd/mm/yyyy"}
+  for(const g of D.grups)for(const e of g.rows){const row=wd.addRow([nombre(g.pid),dt(e.fecha),hora(e.inicio,e.fin),dt(e.comp?.fecha),unitat(e.comp),e.comp?.territorio||"",horaComp(e.comp),compEstado(e)]);row.font=F;row.getCell(2).numFmt="dd/mm/yyyy";row.getCell(4).numFmt="dd/mm/yyyy"}
   wd.autoFilter={from:"A1",to:"H1"};
   return await wb.xlsx.writeBuffer();
 }
@@ -1174,7 +1183,7 @@ function vGuia(){
     ...(window.SEM_AUTH?[["Canvia la contrasenya","El primer dia, prem el botó «Contrasenya» de dalt a la dreta i posa'n una que només sàpigues tu.",""]]:[]),
     ["Envia la teva disponibilitat","A «La meva disponibilitat», marca al calendari tots els dies que pots, tria la franja horària i prem «Envia la disponibilitat». També pots prémer un dia al «Calendari».","mis"],
     ["Espera la validació","El gestor decideix quins dies t'assigna. Quan tornis a entrar, el quadre «Novetats» t'ho dirà.","calendario"],
-    ["Informa la compensació","Per cada dia assignat, indica el dia que compenses, el tipus d'unitat (SVAm, SVAi, VIR, ECO, UIS o Altres), l'indicatiu (per exemple N301), el territori i l'horari.","mis"],
+    ["Informa la compensació","Per cada dia assignat, indica el dia que compenses, el tipus d'unitat (SVAm, SVAi, VIR, ECO, UIS o Altres), l'indicatiu (per exemple N301), el territori, la durada del torn (12 o 24 hores) i l'hora d'inici. Cal omplir tots els camps: si en falta algun, no es pot desar.","mis"],
     ["Apunta les vacances","A «Vacances», afegeix els teus períodes. Aquells dies no se't podrà assignar cap auditoria.","vacaciones"],
     ["Si no pots fer un dia assignat","Obre el dia i prem «Sol·licita un canvi». Escriu el motiu. El gestor l'acceptarà o el rebutjarà.","mis"],
     ["Consulta la teva situació","«La meva situació» mostra els dies assignats respecte a l'objectiu del mes, els pendents i les compensacions, mes a mes.","situacion"]];
@@ -1184,7 +1193,7 @@ function vGuia(){
     ["Valida les disponibilitats","A «Pendents de validar», assigna o descarta cada dia. «Proposa una assignació» cobreix el mínim i dona prioritat a qui li falten més dies; res s'assigna fins que ho confirmes.","validar"],
     ["Comprova la cobertura","Al «Calendari», la vora de cada dia indica si està cobert. La llista «Dies sense cobertura mínima» et porta als dies que falten.","calendario"],
     ["Resol les sol·licituds de canvi","Si un auditor demana que li retirin un dia, ho veus a «Pendents de validar» amb el motiu. Si l'acceptes, el dia queda sense aquell auditor.","validar"],
-    ["Segueix les compensacions","Cada dia assignat necessita dia de compensació, tipus d'unitat, indicatiu i territori. Els noms en taronja encara no l'han informat; també la pots informar tu.","validar"],
+    ["Segueix les compensacions","Cada dia assignat necessita dia de compensació, tipus d'unitat, indicatiu, territori i hores d'inici i de fi. Els noms en taronja encara no l'han informat; també la pots informar tu.","validar"],
     ["Treu els informes","A «Informe», tria les dates i descarrega l'Excel o el PDF. El «Quadrant mensual» dona la vista de tot el mes.","informe"],
     ["Gestiona l'equip","A «Equip i rols», afegeix persones, marca el seu rol"+(window.SEM_AUTH?" i escriu el seu usuari":"")+". A «El meu perfil» pots veure l'aplicació com la veu un auditor.","equipo"],
     ["Desa una còpia de seguretat","A «Equip i rols», prem «Descarrega una còpia» un cop per setmana. Si mai es perden dades, es poden restaurar des d'aquest fitxer.","equipo"],
@@ -1322,6 +1331,10 @@ document.addEventListener("change",ev=>{
   if(t.id&&t.id.startsWith("inf-")){const k=t.id.slice(4);S.inf={...S.inf,[k]:t.type==="checkbox"?t.checked:t.value};render();return}
   if(t.id==="sit-pid"){S.sitPid=t.value;render();return}
   if(t.id==="vac-pid"){S.vacPid=t.value;render();return}
+  if(t.id==="c-dur"||t.id==="c-ini-s"){const d=$("c-dur").value,alt=d==="altres",sel=$("c-ini-s"),ti=$("c-ini-t"),fi=$("c-fin");
+    if(t.id==="c-dur"){sel.hidden=sel.disabled=alt;ti.hidden=ti.disabled=!alt;fi.readOnly=!alt;
+      if(!alt){const cur=sel.value;sel.innerHTML=`<option value="">Selecciona…</option>`+HORES(d).map(h=>`<option ${cur===h?"selected":""}>${h}</option>`).join("")}}
+    if(!alt)fi.value=sel.value?fiDe(sel.value,d):"";return}
   if(t.id==="d-franja"){const fr=FRANJAS[t.value];if(fr.i){$("d-ini").value=fr.i;$("d-fin").value=fr.f}return}
   if(t.id==="daymin"){const k=t.dataset.k,v=parseInt(t.value,10);if(!(v>=1))return;const c=clone(S.cfg);c.minDias=c.minDias||{};if(v===c.minPorDia)delete c.minDias[k];else c.minDias[k]=v;guarda(()=>saveCfg(c),`Mínim del dia: ${v}`,fDMY(k));return}
   if(t.dataset.obj){const p=t.dataset.obj,mes=ym(S.cursor),v=t.value===""?null:parseInt(t.value,10);const c=clone(S.cfg);c.objetivosMes=c.objetivosMes||{};c.objetivosMes[mes]=c.objetivosMes[mes]||{};
@@ -1354,7 +1367,10 @@ document.addEventListener("submit",ev=>{
     if(fd.inicio===fd.fin){toast("L'hora d'inici i la de fi no poden coincidir");return}
     guarda(async()=>{for(const d of dies)await dref(me,d).set({fecha:d,franja:fd.franja,inicio:fd.inicio,fin:fd.fin,nota:(fd.nota||"").trim(),estado:"pendiente",enviado:new Date().toISOString()});S.selDias.clear()},`Disponibilitat enviada: ${dies.length} dia(es)`,`${nombre(me)} · ${dies.map(d=>fDMY(d).slice(0,5)).join(", ")}`);return}
   if(k==="comp"){const p=f.dataset.p,fecha=f.dataset.f;
-    guarda(async()=>{await dref(p,fecha).update({comp:{fecha:fd.fecha,recurso:fd.recurso.trim(),indicativo:fd.indicativo.trim().toUpperCase(),territorio:fd.territorio.trim(),inicio:fd.inicio,fin:fd.fin},compInformada:new Date().toISOString()});S.editComp=null},"Compensació desada",`${nombre(p)} · auditoria ${fDMY(fecha)} · compensa ${fDMY(fd.fecha)} a ${fd.recurso} ${fd.indicativo.toUpperCase()}`);return}
+    const nova={fecha:fd.fecha,recurso:(fd.recurso||"").trim(),indicativo:(fd.indicativo||"").trim().toUpperCase(),territorio:(fd.territorio||"").trim(),inicio:fd.inicio||"",fin:fd.durada==="altres"?(fd.fin||""):(fd.inicio?fiDe(fd.inicio,fd.durada):""),durada:fd.durada||"altres"},falta=compFalta(nova);
+    if(!falta.length&&nova.durada!=="altres"&&!HORES(nova.durada).includes(nova.inicio)){toast("Tria una hora d'inici de la llista");return}
+    if(falta.length){toast(`No es pot desar la compensació: falta ${falta.join(", ")}`);return}
+    guarda(async()=>{await dref(p,fecha).update({comp:nova,compInformada:new Date().toISOString()});S.editComp=null},"Compensació desada",`${nombre(p)} · auditoria ${fDMY(fecha)} · compensa ${fDMY(fd.fecha)} a ${fd.recurso} ${fd.indicativo.toUpperCase()}`);return}
   if(k==="vac"){const p=S.vacPid;if(fd.hasta<fd.desde){toast("La data final no pot ser anterior a la inicial");return}
     const l=(S.vac.get(p)||[]).slice();if(l.some(v=>fd.desde<=v.hasta&&v.desde<=fd.hasta)){toast("Se solapa amb un altre període de vacances");return}
     l.push({id:Date.now().toString(36),desde:fd.desde,hasta:fd.hasta,nota:(fd.nota||"").trim()});
