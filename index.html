@@ -50,7 +50,7 @@ header.top{background:var(--surface);color:var(--fg);border-bottom:4px solid var
 .badge{background:var(--sem);color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:5px 10px;border-radius:3px}
 .who{margin-left:auto;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .role{text-transform:uppercase;letter-spacing:.06em;font-size:12px;border:1px solid currentColor;padding:2px 8px;border-radius:3px}
-nav.tabs{display:flex;gap:6px;overflow-x:auto;min-width:0}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
 nav.tabs button{font:500 15px var(--font-body);border:1px solid #4a5157;background:var(--bar-btn);color:var(--bar-ink);padding:7px 14px;border-radius:4px;cursor:pointer;white-space:nowrap}
 nav.tabs button[aria-selected="true"]{background:var(--sem);border-color:var(--sem)}
 .notice{margin-top:12px;padding:10px 14px;border-radius:6px;background:var(--warn-bg);color:var(--fg);font-size:14px;border-left:4px solid var(--warn)}
@@ -211,6 +211,13 @@ table.quad th,table.quad td{padding:3px 2px;text-align:center;font:500 11px var(
 table.quad th{font-weight:700;color:var(--fg)}
 table.quad td.q-n,table.quad th:first-child{text-align:left;font:600 13px var(--font-body);white-space:nowrap;padding:3px 8px;text-transform:none}
 .q-A,.q-AC{background:var(--ok-bg);color:var(--ok);font-weight:700}.q-C{background:var(--warn-bg);color:var(--warn);font-weight:700}.q-V{background:var(--vac-bg);color:var(--vac)}.q-p{color:var(--muted)}.q-wk{background:var(--surface-2)}
+.gsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px 28px}
+.gstep{display:flex;gap:12px;min-width:0}
+.gnum{flex:none;width:34px;height:34px;background:var(--sem);color:var(--sem-ink);font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center}
+.gt{margin:0 0 3px;font-size:17px;font-weight:700;text-transform:none;letter-spacing:0;color:var(--fg)}
+.gd{margin:0 0 6px;color:var(--muted);max-width:60ch}
+.gleg{display:flex;align-items:center;gap:10px}
+.gsw{display:inline-block;width:34px;height:22px;box-sizing:border-box;flex:none}
 details summary{cursor:pointer;color:var(--muted);font-weight:500}
 </style>
 
@@ -437,6 +444,7 @@ function renderHeader(){
   if(a||g) tabs.push(["vacaciones","Vacances",0]);
   if(g) tabs.push(["informe","Informe",0]);
   if(g){tabs.push(["objetivos","Objectius i regles",0]);tabs.push(["equipo","Equip i rols",0]);tabs.push(["historial","Historial",0])}
+  if(a||g) tabs.push(["guia","Guia d'ús",0]);
   if(realGestor()) tabs.push(["perfil","El meu perfil",0]);
   if(!tabs.some(t=>t[0]===S.tab)) S.tab="calendario";
   $("tabs").innerHTML=tabs.map(([k,l,n])=>`<button role="tab" data-a="tab" data-v="${k}" aria-selected="${S.tab===k}">${l}${badge(n)}</button>`).join("");
@@ -451,7 +459,7 @@ function render(){
   renderHeader();
   const m=$("main");
   if(needsLink()){m.innerHTML=vVincular();return}
-  const v={calendario:vCalendario,validar:vValidar,mis:vMis,vacaciones:vVacaciones,situacion:vSituacion,perfil:vPerfil,informe:vInforme,objetivos:vObjetivos,equipo:vEquipo,historial:vHistorial}[S.tab]||vCalendario;
+  const v={calendario:vCalendario,validar:vValidar,mis:vMis,vacaciones:vVacaciones,situacion:vSituacion,perfil:vPerfil,informe:vInforme,objetivos:vObjetivos,equipo:vEquipo,historial:vHistorial,guia:vGuia}[S.tab]||vCalendario;
   m.innerHTML=v();
 }
 const needsLink=()=>!S.demo&&S.uid&&S.eqLoaded&&!realPid()&&!S.skipLink&&!(window.SEM_AUTH&&S.owner);
@@ -769,7 +777,8 @@ function vPerfil(){
     ["Informe","Informes per dates en Excel i PDF","Sense accés"],
     ["Objectius i regles","Objectius per mes, mínims i dies especials","Sense accés"],
     ["Equip i rols","Altes, baixes, canvi de rol i còpia de seguretat","Sense accés"],
-    ["Historial","Registre de tots els canvis","Sense accés"]];
+    ["Historial","Registre de tots els canvis","Sense accés"],
+    ["Guia d'ús","Guia de gestors i d'auditors","Guia d'auditors"]];
   return `<div class="grid2"><div class="stack"><section class="panel"><h2>El meu perfil</h2>
     <p class="lead">${esc(rp?nombre(rp):"Propietari/ària")} · ${realAuditor()?"gestor/a i auditor/a":"gestor/a"}. Canvia de vista per comprovar què veu i què pot fer cada perfil.</p>
     <div class="seg" role="group" aria-label="Vista"><button data-a="vista" data-v="gestor" aria-pressed="${!sim}">Mostra com a gestor/a</button><button data-a="vista" data-v="auditor" aria-pressed="${sim}" ${aud.length?"":"disabled"}>Mostra com a auditor/a</button></div>
@@ -1156,6 +1165,44 @@ function crearQuadrantPDF(){
   const np=doc.getNumberOfPages();
   for(let i=1;i<=np;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(...MUT);doc.text("SEM · Planificació d'auditories · Generat "+gen,L,204.5);doc.text(`Pàgina ${i} de ${np}`,Rr,204.5,{align:"right"})}
   return doc.output("arraybuffer");
+}
+
+/* ---------- guia d'ús ---------- */
+function vGuia(){
+  const g=isGestor(),a=isAuditor();
+  const AUD=[
+    ...(window.SEM_AUTH?[["Canvia la contrasenya","El primer dia, prem el botó «Contrasenya» de dalt a la dreta i posa'n una que només sàpigues tu.",""]]:[]),
+    ["Envia la teva disponibilitat","A «La meva disponibilitat», marca al calendari tots els dies que pots, tria la franja horària i prem «Envia la disponibilitat». També pots prémer un dia al «Calendari».","mis"],
+    ["Espera la validació","El gestor decideix quins dies t'assigna. Quan tornis a entrar, el quadre «Novetats» t'ho dirà.","calendario"],
+    ["Informa la compensació","Per cada dia assignat, indica el dia que compenses, el tipus d'unitat (SVAm, SVAi, VIR, ECO, UIS o Altres), l'indicatiu (per exemple N301), el territori i l'horari.","mis"],
+    ["Apunta les vacances","A «Vacances», afegeix els teus períodes. Aquells dies no se't podrà assignar cap auditoria.","vacaciones"],
+    ["Si no pots fer un dia assignat","Obre el dia i prem «Sol·licita un canvi». Escriu el motiu. El gestor l'acceptarà o el rebutjarà.","mis"],
+    ["Consulta la teva situació","«La meva situació» mostra els dies assignats respecte a l'objectiu del mes, els pendents i les compensacions, mes a mes.","situacion"]];
+  const GES=[
+    ["Fixa les regles del mes","A «Objectius i regles»: mínim d'auditors per dia, dies amb mínim especial (★) i objectiu de cada auditor. Un canvi d'objectiu només afecta aquell mes.","objetivos"],
+    ["Revisa les novetats","En entrar, el quadre «Novetats» i el número de la pestanya «Pendents de validar» et diuen què ha arribat des de l'última visita.","calendario"],
+    ["Valida les disponibilitats","A «Pendents de validar», assigna o descarta cada dia. «Proposa una assignació» cobreix el mínim i dona prioritat a qui li falten més dies; res s'assigna fins que ho confirmes.","validar"],
+    ["Comprova la cobertura","Al «Calendari», la vora de cada dia indica si està cobert. La llista «Dies sense cobertura mínima» et porta als dies que falten.","calendario"],
+    ["Resol les sol·licituds de canvi","Si un auditor demana que li retirin un dia, ho veus a «Pendents de validar» amb el motiu. Si l'acceptes, el dia queda sense aquell auditor.","validar"],
+    ["Segueix les compensacions","Cada dia assignat necessita dia de compensació, tipus d'unitat, indicatiu i territori. Els noms en taronja encara no l'han informat; també la pots informar tu.","validar"],
+    ["Treu els informes","A «Informe», tria les dates i descarrega l'Excel o el PDF. El «Quadrant mensual» dona la vista de tot el mes.","informe"],
+    ["Gestiona l'equip","A «Equip i rols», afegeix persones, marca el seu rol"+(window.SEM_AUTH?" i escriu el seu usuari":"")+". A «El meu perfil» pots veure l'aplicació com la veu un auditor.","equipo"],
+    ["Desa una còpia de seguretat","A «Equip i rols», prem «Descarrega una còpia» un cop per setmana. Si mai es perden dades, es poden restaurar des d'aquest fitxer.","equipo"],
+    ["Consulta l'historial","La pestanya «Historial» guarda els darrers 300 canvis: qui ha fet què i quan.","historial"]];
+  const passos=l=>`<div class="gsteps">${l.map(([t,d,go],i)=>`<div class="gstep"><span class="gnum">${i+1}</span><div><h3 class="gt">${t}</h3><p class="gd">${d}</p>${go?`<button class="btn sm" data-a="tab" data-v="${go}">Obre</button>`:""}</div></div>`).join("")}</div>`;
+  const ll=(sw,t)=>`<div class="gleg">${sw}<span>${t}</span></div>`;
+  return `<div class="stack">
+    ${g?`<section class="panel"><h2>Guia per a gestors</h2><p class="lead">El cicle de cada mes, pas a pas.</p>${passos(GES)}</section>`:""}
+    ${a||g?`<section class="panel"><h2>${g&&!a?"Què fan els auditors":"Guia per a auditors"}</h2><p class="lead">${g&&!a?"Els passos que segueix cada auditor, per si has d'ajudar algú.":"Com enviar la disponibilitat, informar les compensacions i consultar la teva situació."}</p>${passos(g&&!a?AUD.map(x=>[x[0],x[1],""]):AUD)}</section>`:""}
+    <section class="panel"><h2>Què volen dir els colors del calendari</h2>
+    <div class="gsteps mt">
+      ${g?ll(`<i class="gsw" style="border:3px solid var(--ok)"></i>`,"Vora verda: dia cobert")+ll(`<i class="gsw" style="border:3px solid var(--warn)"></i>`,"Vora taronja: cobertura parcial")+ll(`<i class="gsw" style="border:3px solid var(--bad)"></i>`,"Vora vermella: ningú assignat"):""}
+      ${ll(`<span class="chip c-ok">${g?"Nom":"Assignat"}</span>`,"Dia assignat i compensació informada")}
+      ${ll(`<span class="chip c-warn">${g?"Nom":"Assignat"}</span>`,"Dia assignat, falta informar la compensació")}
+      ${ll(`<span class="chip pend">${g?"Nom":"Pendent"}</span>`,"Disponibilitat enviada, pendent de validar")}
+      ${ll(`<span class="chip vac">Vacances</span>`,"Dies de vacances")}
+      ${ll(`<b class="star" style="font-size:16px;vertical-align:baseline">★</b>`,"Dia en què calen més auditors del que és habitual")}
+    </div></section></div>`;
 }
 
 /* ---------- objetivos y reglas (gestor) ---------- */
