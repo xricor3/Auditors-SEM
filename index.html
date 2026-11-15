@@ -364,7 +364,7 @@ const S = {
   equipo:{}, eqLoaded:false,
   cfg:{minPorDia:2, minDias:{}, objetivoDefecto:2, objetivosMes:{}},
   dias:new Map(), vac:new Map(), subs:new Map(), names:new Map(),
-  tab:"calendario", mode:"mes", cursor:new Date(), filtro:"todos", vacPid:null, inf:null, dl:null, vista:"gestor", verComo:null, username:null, proposta:null, selMes:null, selDias:new Set(), editSol:null, log:[], logSub:false, avisOk:false, quadMes:null, sitPid:null, sitYear:new Date().getFullYear(),
+  tab:"calendario", mode:"mes", cursor:new Date(), filtro:"todos", vacPid:null, inf:null, dl:null, vista:"gestor", verComo:null, username:null, proposta:null, selMes:null, selDias:new Set(), editSol:null, log:[], logSub:false, avisOk:false, quadMes:null, acc:new Map(), vacLoaded:false, accDone:false, sitPid:null, sitYear:new Date().getFullYear(),
   editComp:null, busy:false, loaded:false, stale:false, skipLink:false
 };
 let saved={}; try{saved=JSON.parse(localStorage.getItem("sem-ui")||"{}")}catch(e){}
@@ -1195,7 +1195,7 @@ function vGuia(){
     ["Resol les sol·licituds de canvi","Si un auditor demana que li retirin un dia, ho veus a «Pendents de validar» amb el motiu. Si l'acceptes, el dia queda sense aquell auditor.","validar"],
     ["Segueix les compensacions","Cada dia assignat necessita dia de compensació, tipus d'unitat, indicatiu, territori i hores d'inici i de fi. Els noms en taronja encara no l'han informat; també la pots informar tu.","validar"],
     ["Treu els informes","A «Informe», tria les dates i descarrega l'Excel o el PDF. El «Quadrant mensual» dona la vista de tot el mes.","informe"],
-    ["Gestiona l'equip","A «Equip i rols», afegeix persones, marca el seu rol"+(window.SEM_AUTH?" i escriu el seu usuari":"")+". A «El meu perfil» pots veure l'aplicació com la veu un auditor.","equipo"],
+    ["Gestiona l'equip","A «Equip i rols», afegeix persones, marca el seu rol"+(window.SEM_AUTH?" i escriu el seu usuari":"")+". La columna «Últim accés» et diu quan ha entrat cada persona per última vegada. A «El meu perfil» pots veure l'aplicació com la veu un auditor.","equipo"],
     ["Desa una còpia de seguretat","A «Equip i rols», prem «Descarrega una còpia» un cop per setmana. Si mai es perden dades, es poden restaurar des d'aquest fitxer.","equipo"],
     ["Consulta l'historial","La pestanya «Historial» guarda els darrers 300 canvis: qui ha fet què i quan.","historial"]];
   const passos=l=>`<div class="gsteps">${l.map(([t,d,go],i)=>`<div class="gstep"><span class="gnum">${i+1}</span><div><h3 class="gt">${t}</h3><p class="gd">${d}</p>${go?`<button class="btn sm" data-a="tab" data-v="${go}">Obre</button>`:""}</div></div>`).join("")}</div>`;
@@ -1245,19 +1245,20 @@ function vEquipo(){
   const ids=Object.keys(S.equipo).sort(porNombre),dis=S.demo?"disabled":"",gh=!!window.SEM_AUTH;
   return `<div class="stack"><section class="panel"><h2>Equip i rols</h2>
   <p class="lead">El rol de gestor/a dona accés a totes les gestions. El rol d'auditor/a permet introduir la seva disponibilitat, les seves vacances i les seves compensacions. Una persona pot tenir tots dos.</p>
-  <div class="scroll"><table><thead><tr><th>Nom</th><th>Auditor/a</th><th>Gestor/a</th><th>${gh?"Usuari":"Compte vinculat"}</th><th></th></tr></thead><tbody>
+  <div class="scroll"><table><thead><tr><th>Nom</th><th>Auditor/a</th><th>Gestor/a</th><th>${gh?"Usuari":"Compte vinculat"}</th><th>Últim accés</th><th></th></tr></thead><tbody>
   ${ids.map(p=>{const q=S.equipo[p],acc=q.uid?(S.names.get(q.uid)||"Vinculat"):"";
     return `<tr><td><input class="wide" id="eq-n-${esc(p)}" data-eqname="${esc(p)}" value="${esc(q.nombre)}" aria-label="Nom" ${dis}></td>
     <td><input type="checkbox" id="eq-a-${esc(p)}" data-eqrole="auditor" data-p="${esc(p)}" ${q.auditor?"checked":""} aria-label="Auditor" ${dis}></td>
     <td><input type="checkbox" id="eq-g-${esc(p)}" data-eqrole="gestor" data-p="${esc(p)}" ${q.gestor?"checked":""} aria-label="Gestor" ${dis}></td>
     <td>${gh?`<input class="mid" id="eq-u-${esc(p)}" data-equser="${esc(p)}" value="${esc(q.usuario||"")}" placeholder="p. ex. pvazquez" aria-label="Usuari de ${esc(q.nombre)}" autocomplete="off" ${dis}>`:q.uid?`${esc(acc)}${q.uid===S.uid?" (tu)":""} ${S.demo?"":`<button class="btn sm" data-a="unlink" data-p="${esc(p)}">Desvincula</button>`}`:`<span class="muted">Sense vincular</span>`}</td>
+    <td class="mono">${S.acc.get(p)?fDataHora(S.acc.get(p)):`<span class="muted">Encara no ha entrat</span>`}</td>
     <td>${S.demo?"":`<button class="btn sm danger" data-a="delpers" data-p="${esc(p)}">Elimina</button>`}</td></tr>`}).join("")}
   </tbody></table></div>
   <form class="form mt" data-form="addpers"><label class="f">Persona nova<input id="np-nombre" name="nombre" required maxlength="60" placeholder="Nom i cognom"></label>
     <label class="f chk"><span><input type="checkbox" id="np-a" name="auditor" checked> Auditor/a</span></label>
     <label class="f chk"><span><input type="checkbox" id="np-g" name="gestor"> Gestor/a</span></label>
     <div><button class="btn primary" ${dis}>Afegeix a l'equip</button></div></form>
-  <p class="hint">${gh?"Escriu al costat de cada persona el seu usuari: el mateix que has creat a Firebase, sense la part de l'arrova. Sense usuari assignat, aquella persona no pot veure ni modificar res.":`Cada persona vincula el seu nom el primer cop que obre l'aplicació. Si algú s'equivoca de nom, prem "Desvincula" i que torni a entrar.`}</p></section>
+  <p class="hint">${gh?"Escriu al costat de cada persona el seu usuari: el mateix que has creat a Firebase, sense la part de l'arrova. Sense usuari assignat, aquella persona no pot veure ni modificar res. La columna «Últim accés» mostra l'última vegada que cada persona ha obert l'aplicació.":`Cada persona vincula el seu nom el primer cop que obre l'aplicació. Si algú s'equivoca de nom, prem "Desvincula" i que torni a entrar.`}</p></section>
   <section class="panel"><h2>Còpia de seguretat</h2>
   <p class="lead">Descarrega un fitxer amb totes les dades: equip, regles, disponibilitats, compensacions i vacances. Si restaures una còpia, se sobreescriuen els registres que conté el fitxer; els que s'hagin creat després no s'esborren.</p>
   <div class="toolbar" style="margin-bottom:0"><button class="btn primary" data-a="backup" ${dis}>Descarrega una còpia</button><label class="f inline">Restaura una còpia<input type="file" id="rest-file" accept=".json,application/json" style="width:auto" ${dis}></label></div></section></div>`;
@@ -1265,6 +1266,15 @@ function vEquipo(){
 
 /* ---------- escrituras ---------- */
 const dref=(p,f)=>S.db.doc(`disp/${p}/dias/${f}`);
+// L'últim accés de cada persona es desa al seu document de vacances (camp "acceso")
+const vacDoc=(p,l)=>({periodos:l,...(S.acc.get(p)?{acceso:S.acc.get(p)}:{})});
+function registraAcces(){
+  if(S.accDone||S.demo||!S.db||!S.eqLoaded||!S.vacLoaded)return;
+  const p=realPid();if(!p)return;S.accDone=true;
+  const ara=new Date().toISOString();
+  try{const r=S.db.doc(`vacaciones/${p}`).set({periodos:S.vac.get(p)||[],acceso:ara});if(r&&r.catch)r.catch(()=>{})}catch(e){}
+}
+const fDataHora=t=>{const d=new Date(t);return isNaN(d)?"":`${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
 const saveCfg=c=>S.db.doc("config/planificacion").set(c);
 const saveEq=async e=>{const old=clone(S.equipo);await S.db.doc("config/equipo").set({personas:e});if(window.SEM_SYNC_ROLS)await window.SEM_SYNC_ROLS(e,old)};
 async function guarda(fn,ok,det){
@@ -1317,7 +1327,7 @@ document.addEventListener("click",ev=>{
   if(a==="editcomp"){S.editComp=v;render();return}
   if(a==="cancelcomp"){S.editComp=null;render();return}
   if(a==="borrar"){if(!confirmar(b,"Segur? Retira"))return;guarda(()=>dref(p,f).delete(),"Disponibilitat retirada",`${nombre(p)} · ${fDMY(f)}`);return}
-  if(a==="delvac"){if(!confirmar(b,"Segur? Elimina"))return;const l=(S.vac.get(p)||[]).filter(x=>x.id!==v);guarda(()=>S.db.doc(`vacaciones/${p}`).set({periodos:l}),"Vacances eliminades",nombre(p));return}
+  if(a==="delvac"){if(!confirmar(b,"Segur? Elimina"))return;const l=(S.vac.get(p)||[]).filter(x=>x.id!==v);guarda(()=>S.db.doc(`vacaciones/${p}`).set(vacDoc(p,l)),"Vacances eliminades",nombre(p));return}
   if(a==="delmin"){const c=clone(S.cfg);delete c.minDias[v];guarda(()=>saveCfg(c),"Mínim del dia restablert",fDMY(v));return}
   if(a==="unlink"){if(!confirmar(b,"Segur? Desvincula"))return;const e=clone(S.equipo);e[p].uid=null;guarda(()=>saveEq(e),"Compte desvinculat",nombre(p));return}
   if(a==="delpers"){
@@ -1374,7 +1384,7 @@ document.addEventListener("submit",ev=>{
   if(k==="vac"){const p=S.vacPid;if(fd.hasta<fd.desde){toast("La data final no pot ser anterior a la inicial");return}
     const l=(S.vac.get(p)||[]).slice();if(l.some(v=>fd.desde<=v.hasta&&v.desde<=fd.hasta)){toast("Se solapa amb un altre període de vacances");return}
     l.push({id:Date.now().toString(36),desde:fd.desde,hasta:fd.hasta,nota:(fd.nota||"").trim()});
-    guarda(async()=>{await S.db.doc(`vacaciones/${p}`).set({periodos:l});f.reset()},"Vacances registrades",`${nombre(p)} · ${fDMY(fd.desde)} – ${fDMY(fd.hasta)}`);return}
+    guarda(async()=>{await S.db.doc(`vacaciones/${p}`).set(vacDoc(p,l));f.reset()},"Vacances registrades",`${nombre(p)} · ${fDMY(fd.desde)} – ${fDMY(fd.hasta)}`);return}
   if(k==="cfg"){const c=clone(S.cfg);c.minPorDia=Math.max(1,parseInt(fd.minPorDia,10)||2);c.objetivoDefecto=Math.max(0,parseInt(fd.objetivoDefecto,10)||0);guarda(()=>saveCfg(c),"Regles desades");return}
   if(k==="minday"){const c=clone(S.cfg);c.minDias=c.minDias||{};c.minDias[fd.fecha]=Math.max(1,parseInt(fd.min,10)||1);guarda(async()=>{await saveCfg(c);f.reset()},"Dia amb mínim especial afegit",`${fDMY(fd.fecha)} · mínim ${fd.min}`);return}
   if(k==="addpers"){const n=fd.nombre.trim();if(!n)return;let id=slug(n),i=2;while(S.equipo[id])id=slug(n)+"-"+i++;
@@ -1401,9 +1411,9 @@ async function start(){
   S.db=db;S.user=user;S.username=window.SEM_USER?window.SEM_USER():null;
   try{if(user){S.uid=await user.id();S.owner=await user.isOwner();const cw=await user.can("data.write");S.canWrite=cw!==false}}catch(e){}
   const timer=setTimeout(()=>{S.stale=true;S.loaded=true;render()},10000);
-  db.doc("config/equipo").onSnapshot(s=>{if(!s.metadata.fromCache){clearTimeout(timer);S.stale=false}S.eqLoaded=true;S.loaded=true;S.equipo=s.exists?clone(s.data().personas):{};syncSubs();resolveNames();render()},()=>{clearTimeout(timer);S.stale=true;S.loaded=true;render()});
+  db.doc("config/equipo").onSnapshot(s=>{if(!s.metadata.fromCache){clearTimeout(timer);S.stale=false}S.eqLoaded=true;S.loaded=true;S.equipo=s.exists?clone(s.data().personas):{};syncSubs();resolveNames();registraAcces();render()},()=>{clearTimeout(timer);S.stale=true;S.loaded=true;render()});
   db.doc("config/planificacion").onSnapshot(s=>{if(s.exists){const d=s.data();S.cfg={minPorDia:d.minPorDia||2,minDias:d.minDias||{},objetivoDefecto:Number.isFinite(d.objetivoDefecto)?d.objetivoDefecto:2,objetivosMes:d.objetivosMes||{}}}render()},()=>{});
-  db.collection("vacaciones").onSnapshot(s=>{S.vac=new Map(s.docs.map(d=>[d.id,(d.data().periodos||[])]));render()},()=>{});
+  db.collection("vacaciones").onSnapshot(s=>{S.vac=new Map(s.docs.map(d=>[d.id,(d.data().periodos||[])]));S.acc=new Map(s.docs.filter(d=>d.data().acceso).map(d=>[d.id,d.data().acceso]));if(!s.metadata.fromCache)S.vacLoaded=true;registraAcces();render()},()=>{});
 }
 function tick(){const d=new Date();$("hora").textContent=d.toLocaleTimeString("ca-ES",{hour12:false});$("fecha").textContent=d.toLocaleDateString("ca-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}
 tick();setInterval(tick,1000);
